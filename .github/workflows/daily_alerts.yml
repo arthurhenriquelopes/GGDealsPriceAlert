@@ -22,7 +22,7 @@ jobs:
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install -r scraper/requirements.txt
 
     - name: Install Playwright Browsers
       run: |
@@ -32,12 +32,6 @@ jobs:
       env:
         EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
         EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-      run: python scraper.py
-
-    - name: Commit and Push Results
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add deals_*.json
-        git commit -m "Auto: Novos deals encontrados em $(date +'%Y-%m-%d')" || exit 0
-        git push
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      run: python scraper/scraper.py

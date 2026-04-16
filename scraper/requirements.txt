@@ -1,7 +1,8 @@
 scrapling
-python-dotenv
 msgspec
 curl_cffi
 patchright
 browserforge
 schedule
+python-dotenv
+requests
