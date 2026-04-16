@@ -39,6 +39,7 @@ export default function CheckboxGroup({ items, selectedItems, onChange, title })
               }}
             >
               {isActive ? <CheckSquare size={14} /> : <Square size={14} />}
+              {item.icon && <img src={item.icon} alt="" style={styles.icon} />}
               <span>{item.name}</span>
             </div>
           )
@@ -87,5 +88,11 @@ const styles = {
     fontSize: '12px',
     fontWeight: '600',
     transition: 'all 0.1s'
+  },
+  icon: {
+    width: '18px',
+    height: '18px',
+    borderRadius: '3px',
+    objectFit: 'cover'
   }
 }
