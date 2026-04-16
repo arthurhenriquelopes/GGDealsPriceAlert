@@ -27,8 +27,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 .venv/
-legacy/
-scraper/*.json
 
 # Logs
 *.log
