@@ -17,50 +17,38 @@ A high-performance, full-stack automated system to track game deals and historic
 - **Scraper:** Python 3.10 / Scrapling / Playwright
 - **Infrastructure:** GitHub Actions (CI/CD and Cron Tasks)
 
-## 🚀 Getting Started
+## 🏗️ Cloud Infrastructure (Hybrid Multi-Cloud)
 
-### Prerequisites
+The system is designed to run 24/7 with zero maintenance costs using a fully detached, serverless architectural pattern:
 
-- Java 21
-- Node.js (Latest LTS)
-- Python 3.10+
+- **Frontend (Vercel):** The React/Vite dashboard deployed as a static site.
+- **Backend API (Render):** Java Spring Boot 3 running seamlessly inside a Docker container natively connected to the database.
+- **Database (Supabase):** Remote PostgreSQL instance acting as the central source of truth for user configs. Connected via IPv4 Session Pooler (`port 6543`).
+- **Automation (GitHub Actions):** The Python scraper wakes up every day at 08:00 AM, fetches the active configs directly from Supabase, scrapes the GG.Deals endpoints seamlessly, and fires the email alerts.
 
-### Local Setup
+## 🚀 Deployment Guide
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/arthurhenriquelopes/GGDealsPriceAlert.git
-   cd \GGDealsPriceAlert
-   ```
+### 1. Database (Supabase)
+Create a new project. Navigate to Database Settings and select **Session pooler** (IPv4 compatibility) to grab your connection string.
 
-2. **Configure Environment Variables:**
-   The backend app and Python scraper require environment variables to operate. Set your `.env` securely matching:
-   ```env
-   EMAIL_SENDER=your-email@example.com
-   EMAIL_PASSWORD=your-app-password
-   ```
+### 2. Backend (Render)
+Deploy the `backend` directly using the existing `Dockerfile` as the root. Provide the following Environment Variables in the Render dashboard:
+- `SPRING_DATASOURCE_URL`: `jdbc:postgresql://<your-pooler-domain>:6543/postgres?sslmode=require`
+- `SPRING_DATASOURCE_USERNAME`: `postgres.<your-project-id>`
+- `SPRING_DATASOURCE_PASSWORD`: `<your-db-password>`
 
-3. **Backend Setup:**
-   Navigate to the `backend` boundary and start the application on port `8080`.
-   ```bash
-   cd backend
-   ./mvnw spring-boot:run
-   ```
+### 3. Frontend (Vercel)
+Deploy the `frontend` folder as a standard Vite project. Provide the following Environment Variable so React knows where the API lives:
+- `VITE_API_URL`: `https://<your-render-app>.onrender.com`
 
-4. **Frontend Setup:**
-   Run the vite dashboard interface.
-   ```bash
-   cd frontend
-   npm install
-   npm run dev
-   ```
+### 4. Scraper Automation (GitHub)
+Navigate to **Settings > Secrets and variables > Actions** in your repository and configure:
+- `SUPABASE_URL`: Setup inside Supabase > Project Settings > API.
+- `SUPABASE_KEY`: Setup inside Supabase > Project Settings > API (anon or service_role).
+- `EMAIL_SENDER`: Your Gmail address.
+- `EMAIL_PASSWORD`: Your 16-character Google App Password.
 
-## 🤖 Automations & CI
-
-The `.github/workflows` directory houses action setups for daily cron jobs (`daily_alerts.yml`).
-To ensure your daily digests trigger seamlessly:
-1. Navigate to **Repository Settings > Secrets and variables > Actions**.
-2. Create repository secrets matching `EMAIL_SENDER` and `EMAIL_PASSWORD`.
+The scraper will now run autonomously every day without requiring a local machine.
 
 ## 📄 License
 
