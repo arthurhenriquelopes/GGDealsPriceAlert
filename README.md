@@ -1,23 +1,23 @@
 # GGDeals Price Alert 🚀
 
-A high-performance, full-stack automated system to track game deals and historical lows on [GG.deals](https://gg.deals). Built with Java Spring Boot, React, and Supabase.
-
-[![Daily Scrape](https://github.com/arthurhenriquelopes/GGDealsPriceAlert/actions/workflows/daily_alerts.yml/badge.svg)](https://github.com/arthurhenriquelopes/GGDealsPriceAlert/actions/workflows/daily_alerts.yml)
+A high-performance, full-stack automated system to track game deals and historical lows on [GG.deals](https://gg.deals). Built with a distributed architecture using Java Spring Boot, React, and Python.
 
 ## 🌟 Features
 
-- **Personalized Alerts**: Configure your own filters (platforms, price range, rating) via a modern dashboard.
-- **Premium Email Alerts**: Receive beautifully styled HTML emails with game thumbnails and direct links.
-- **Daily Automation**: Fully automated daily checks powered by GitHub Actions.
-- **Multi-user Support**: Secure authentication and individual configurations backed by Supabase.
+- **Personalized Alerts**: Configure your own filters (platforms, price range, DRM, stores, rating) via a modern, dark-themed, monochromatic dashboard.
+- **Dynamic Indicators**: Visually track high-quality deals with dynamic rating Fire icons (Orange for 6+, Red for 8+).
+- **Premium Email Alerts**: Receive beautifully styled, high-contrast HTML emails with game thumbnails, deep links, and deal insights directly to your inbox.
+- **Automated Workloads**: Headless scraping tasks powered by stealth automation (`scrapling`) deployed via GitHub Actions for daily delivery.
+- **Multi-user Support**: Secure authentication backed by Supabase logic, isolating each user's configuration and secrets.
+- **AI Gatekeeping**: Securely hook your Groq API credentials for downstream AI inference features.
 
 ## 🛠️ Technology Stack
 
 - **Backend:** Java 21 / Spring Boot 3 / Maven
 - **Frontend:** React 18 / Vite / Lucide Icons
-- **Database:** PostgreSQL (Supabase)
-- **Scraper:** Python 3.10 / Scrapling (StealthyFetcher)
-- **Infrastructure:** GitHub Actions
+- **Database / Auth:** PostgreSQL (Supabase)
+- **Scraper:** Python 3.10 / Scrapling / Playwright
+- **Infrastructure:** GitHub Actions (CI/CD and Cron Tasks)
 
 ## 🚀 Getting Started
 
@@ -26,46 +26,46 @@ A high-performance, full-stack automated system to track game deals and historic
 - Java 21
 - Node.js (Latest LTS)
 - Python 3.10+
-- A [Supabase](https://supabase.com/) account
+- A [Supabase](https://supabase.com/) account for Database and Auth.
 
 ### Local Setup
 
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/arthurhenriquelopes/GGDealsPriceAlert.git
-   cd                     GGDealsPriceAlert
+   cd \GGDealsPriceAlert
    ```
 
 2. **Configure Environment Variables:**
-   Create a `.env` file in the root directory (using the variables set in your secrets):
+   The backend app and Python scraper require environment variables to operate. Set your `.env` securely matching:
    ```env
-   EMAIL_SENDER=your-email@gmail.com
+   EMAIL_SENDER=your-email@example.com
    EMAIL_PASSWORD=your-app-password
    SUPABASE_URL=your-project-url
-   SUPABASE_KEY=your-anon-key
+   SUPABASE_KEY=your-service-role-key
    ```
 
 3. **Backend Setup:**
+   Navigate to the `backend` boundary and start the application on port `8080`.
    ```bash
    cd backend
    ./mvnw spring-boot:run
    ```
 
 4. **Frontend Setup:**
+   Run the vite dashboard interface.
    ```bash
    cd frontend
    npm install
    npm run dev
    ```
 
-## 🤖 GitHub Actions Setup
+## 🤖 Automations & CI
 
-To enable daily automation, navigate to your repository **Settings > Secrets and variables > Actions** and add the following secrets:
-
-- `EMAIL_SENDER`: Your Gmail address.
-- `EMAIL_PASSWORD`: Your 16-character Google App Password.
-- `SUPABASE_URL`: Your Supabase API URL.
-- `SUPABASE_KEY`: Your Supabase Service Role or Anon Key.
+The `.github/workflows` directory houses action setups for daily cron jobs (`daily_alerts.yml`).
+To ensure your daily digests trigger seamlessly:
+1. Navigate to **Repository Settings > Secrets and variables > Actions**.
+2. Create repository secrets matching `EMAIL_SENDER`, `EMAIL_PASSWORD`, `SUPABASE_URL`, and `SUPABASE_KEY`.
 
 ## 📄 License
 
