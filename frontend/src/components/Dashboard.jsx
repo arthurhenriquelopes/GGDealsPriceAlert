@@ -83,9 +83,9 @@ export default function Dashboard({ userId, initialConfig }) {
         
         {/* Sidebar Controls */}
         <div style={styles.sidebar}>
-          <FilterGroup title="Price & Discount" icon={Percent}>
+          <FilterGroup title="Price & Discount" icon={Percent} defaultOpen={true}>
             <RangeInput 
-              label="Max Price" min={0} max={300} prefix="R$ " 
+              label="Max Price" min={0} max={300} step={5} prefix="R$ " 
               value={config.maxPrice} onChange={(v) => setConfig({...config, maxPrice: v})} 
             />
             <RangeInput 
@@ -104,7 +104,7 @@ export default function Dashboard({ userId, initialConfig }) {
             </div>
           </FilterGroup>
 
-          <FilterGroup title="Ratings & Metascore" icon={Award}>
+          <FilterGroup title="Ratings & Metascore" icon={Award} defaultOpen={false}>
             <RangeInput 
               label="Deal Rating" min={0} max={10} suffix="/10" 
               value={config.minRating} onChange={(v) => setConfig({...config, minRating: v})} 
@@ -115,7 +115,7 @@ export default function Dashboard({ userId, initialConfig }) {
             />
           </FilterGroup>
 
-          <FilterGroup title="Time Constraints" icon={Clock}>
+          <FilterGroup title="Time Constraints" icon={Clock} defaultOpen={false}>
             <div style={styles.inputGroup}>
                <label style={styles.inputLabel}>Deal Started</label>
                <select style={styles.selectInput} value={config.dealsDate} onChange={(e) => setConfig({...config, dealsDate: e.target.value})}>
@@ -139,7 +139,7 @@ export default function Dashboard({ userId, initialConfig }) {
         {/* Dynamic Grids */}
         <div style={styles.content}>
           <div style={styles.contentGrid}>
-            <FilterGroup title="Target Stores" icon={ShoppingCart}>
+            <FilterGroup title="Target Stores" icon={ShoppingCart} defaultOpen={false}>
               <CheckboxGroup 
                 items={STORES} 
                 selectedItems={parseCSV(config.stores)}
@@ -147,7 +147,7 @@ export default function Dashboard({ userId, initialConfig }) {
               />
             </FilterGroup>
 
-            <FilterGroup title="Platforms & Subs" icon={Gamepad2}>
+            <FilterGroup title="Platforms & Subs" icon={Gamepad2} defaultOpen={false}>
               <h5 style={styles.miniHeader}>Platforms</h5>
               <CheckboxGroup 
                 items={PLATFORMS} 
@@ -163,7 +163,7 @@ export default function Dashboard({ userId, initialConfig }) {
               />
             </FilterGroup>
 
-            <FilterGroup title="DRM & Steam Reviews" icon={Shield}>
+            <FilterGroup title="DRM & Steam Reviews" icon={Shield} defaultOpen={false}>
               <h5 style={styles.miniHeader}>Preferred DRM</h5>
               <CheckboxGroup 
                 items={DRMS} 

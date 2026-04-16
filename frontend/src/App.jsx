@@ -15,7 +15,8 @@ function App() {
 
   const fetchConfig = async (userId) => {
     try {
-      const { data } = await axios.get(`http://localhost:8080/api/config/${userId}`)
+      const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080'
+      const { data } = await axios.get(`${BASE_URL}/api/config/${userId}`)
       setConfig(data)
     } catch (e) {
       console.log("No config found for user yet.")
