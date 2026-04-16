@@ -31,9 +31,12 @@ jobs:
 
       - name: Run Scraper
         env:
+          EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
           GITHUB_ACTIONS: "true"
-        run: python scraper.py
+        run: python scraper/scraper.py
 
       - name: Commit and Push results
         run: |
