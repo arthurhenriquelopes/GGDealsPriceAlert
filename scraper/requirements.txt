@@ -1,7 +1,7 @@
 scrapling
 msgspec
 curl_cffi
-playwright
+patchright
 browserforge
 schedule
 python-dotenv
