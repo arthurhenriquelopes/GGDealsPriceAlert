@@ -33,9 +33,9 @@ export default function CheckboxGroup({ items, selectedItems, onChange, title })
               onClick={() => handleToggle(item.id)}
               style={{
                 ...styles.item,
-                background: isActive ? 'rgba(4, 240, 106, 0.05)' : '#000',
-                borderColor: isActive ? '#04f06a' : '#1a1a1a',
-                color: isActive ? '#04f06a' : '#84596b'
+                background: isActive ? '#1a1a1a' : '#000',
+                borderColor: isActive ? '#fff' : '#1a1a1a',
+                color: isActive ? '#fff' : '#888'
               }}
             >
               {isActive ? <CheckSquare size={14} /> : <Square size={14} />}
@@ -56,12 +56,12 @@ const styles = {
     alignItems: 'center',
     marginBottom: '10px'
   },
-  title: { fontSize: '11px', fontWeight: '900', color: '#087ca7', textTransform: 'uppercase' },
+  title: { fontSize: '11px', fontWeight: '800', color: '#888', textTransform: 'uppercase' },
   actions: { display: 'flex', gap: '8px' },
   actionBtn: {
     background: 'none',
     border: 'none',
-    color: '#84596b',
+    color: '#aaa',
     fontSize: '10px',
     fontWeight: '700',
     cursor: 'pointer',

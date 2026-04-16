@@ -1,13 +1,25 @@
 import { useState } from 'react'
+import { Flame } from 'lucide-react'
 
 export default function RangeInput({ label, min, max, step = 1, value, onChange, prefix = '', suffix = '' }) {
+  const isRating = label.toLowerCase().includes('rating')
+
+  const getFlameColor = () => {
+    if (value >= 8) return '#ef4444' // Red Fire
+    if (value >= 6) return '#f97316' // Orange Fire
+    return '#404040' // Graphite inactive
+  }
+
   return (
     <div style={styles.container}>
       <div style={styles.header}>
         <span style={styles.label}>{label}</span>
-        <span style={styles.value}>
-          {prefix}{value}{suffix}
-        </span>
+        <div style={styles.valueGroup}>
+          {isRating && <Flame size={16} color={getFlameColor()} />}
+          <span style={styles.value}>
+            {prefix}{value}{suffix}
+          </span>
+        </div>
       </div>
       
       <input
@@ -33,27 +45,28 @@ const styles = {
   header: {
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'baseline',
+    alignItems: 'center',
     marginBottom: '8px'
   },
-  label: { fontSize: '11px', fontWeight: '900', color: '#087ca7', textTransform: 'uppercase' },
-  value: { fontSize: '20px', fontWeight: '900', color: '#04f06a' },
+  label: { fontSize: '11px', fontWeight: '800', color: '#888', textTransform: 'uppercase' },
+  valueGroup: { display: 'flex', alignItems: 'center', gap: '6px' },
+  value: { fontSize: '18px', fontWeight: '900', color: '#fff' },
   slider: {
     appearance: 'none',
     width: '100%',
     height: '4px',
-    background: '#1a1a1a',
+    background: '#333',
     outline: 'none',
     cursor: 'pointer',
-    accentColor: '#04f06a'
+    accentColor: '#fff'
   },
   footer: {
     display: 'flex',
     justifyContent: 'space-between',
     marginTop: '6px',
-    fontSize: '9px',
+    fontSize: '10px',
     fontWeight: '700',
-    color: '#84596b',
+    color: '#666',
     textTransform: 'uppercase'
   }
 }

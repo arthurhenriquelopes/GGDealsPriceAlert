@@ -1,8 +1,8 @@
 :root {
-  --color-accent: #84596b;      /* Dusty Purple */
-  --color-primary: #04f06a;     /* Bright Green */
-  --color-secondary: #087ca7;   /* Deep Blue */
-  --color-text: #e8f1f2;        /* Light Cyan/White */
+  --color-accent: #333333;      /* Graphite */
+  --color-primary: #ffffff;     /* White */
+  --color-secondary: #888888;   /* Gray */
+  --color-text: #ffffff;        /* White */
   --color-bg: #000000;          /* Pure Black */
   --color-card: #0a0a0a;        /* Elevated Black */
   --color-border: #1a1a1a;      /* Subtle border */

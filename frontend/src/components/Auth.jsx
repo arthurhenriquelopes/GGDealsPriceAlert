@@ -80,7 +80,7 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     minHeight: '100vh',
-    color: '#e8f1f2',
+    color: '#fff',
     background: '#000'
   },
   card: {
@@ -94,7 +94,7 @@ const styles = {
     border: '1px solid #1a1a1a'
   },
   title: { fontSize: '24px', margin: '0 0 10px 0', fontWeight: '900', letterSpacing: '-0.5px' },
-  subtitle: { color: '#84596b', fontSize: '13px', marginBottom: '30px', fontWeight: '600' },
+  subtitle: { color: '#888', fontSize: '13px', marginBottom: '30px', fontWeight: '600' },
   form: { display: 'flex', flexDirection: 'column', gap: '15px' },
   inputGroup: {
     position: 'relative',
@@ -104,18 +104,18 @@ const styles = {
     borderRadius: '2px',
     border: '1px solid #1a1a1a'
   },
-  icon: { marginLeft: '12px', color: '#087ca7' },
+  icon: { marginLeft: '12px', color: '#fff' },
   input: {
     background: 'transparent',
     border: 'none',
-    color: '#e8f1f2',
+    color: '#fff',
     padding: '12px',
     width: '100%',
     fontSize: '14px',
     outline: 'none'
   },
   button: {
-    background: '#04f06a', // Neon Green
+    background: '#fff', // Monochrome Button
     color: '#000',
     padding: '12px',
     borderRadius: '2px',
@@ -133,7 +133,7 @@ const styles = {
   toggleBtn: {
     background: 'none',
     border: 'none',
-    color: '#087ca7',
+    color: '#aaa',
     marginTop: '20px',
     cursor: 'pointer',
     fontSize: '13px',

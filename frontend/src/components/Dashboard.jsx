@@ -82,10 +82,11 @@ export default function Dashboard({ userId, initialConfig }) {
               </div>
               <div style={{
                 ...styles.toggleSwitch,
-                background: config.onlyHistoricalLow ? '#04f06a' : '#1a1a1a'
+                background: config.onlyHistoricalLow ? '#fff' : '#1a1a1a'
               }}>
                 <div style={{
                   ...styles.toggleThumb,
+                  background: config.onlyHistoricalLow ? '#000' : '#888',
                   transform: config.onlyHistoricalLow ? 'translateX(16px)' : 'translateX(0px)'
                 }}/>
               </div>
@@ -139,11 +140,11 @@ const styles = {
     padding: '10px 0',
     cursor: 'pointer'
   },
-  toggleLabel: { fontSize: '12px', fontWeight: '800', color: '#e8f1f2', display: 'flex', alignItems: 'center' },
+  toggleLabel: { fontSize: '12px', fontWeight: '800', color: '#fff', display: 'flex', alignItems: 'center' },
   toggleSwitch: { width: '36px', height: '20px', borderRadius: '2px', position: 'relative', transition: '0.2s' },
   toggleThumb: { width: '16px', height: '16px', background: '#000', position: 'absolute', top: '2px', left: '2px', transition: '0.2s' },
   saveBtn: {
-    background: '#04f06a',
+    background: '#fff',
     color: '#000',
     padding: '16px',
     borderRadius: '2px',

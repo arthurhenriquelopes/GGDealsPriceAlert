@@ -30,7 +30,7 @@ export default function GroqSetup({ userId, onConfigSaved }) {
     <div style={styles.overlay}>
       <div style={styles.modal}>
         <div style={styles.iconWrapper}>
-          <Zap size={32} color="#10b981" />
+          <Zap size={32} color="#fff" />
         </div>
         <h2 style={styles.title}>Activate AI Features</h2>
         <p style={styles.text}>
@@ -94,16 +94,16 @@ const styles = {
   iconWrapper: {
     width: '64px',
     height: '64px',
-    background: 'rgba(4, 240, 106, 0.05)',
+    background: '#1a1a1a',
     borderRadius: '2px',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     margin: '0 auto 20px auto',
-    border: '1px solid rgba(4, 240, 106, 0.2)'
+    border: '1px solid #333'
   },
-  title: { fontSize: '24px', fontWeight: '900', marginBottom: '15px', color: '#e8f1f2', letterSpacing: '-0.5px' },
-  text: { color: '#84596b', lineHeight: '1.6', fontSize: '14px', marginBottom: '25px', fontWeight: '600' },
+  title: { fontSize: '24px', fontWeight: '900', marginBottom: '15px', color: '#fff', letterSpacing: '-0.5px' },
+  text: { color: '#888', lineHeight: '1.6', fontSize: '14px', marginBottom: '25px', fontWeight: '600' },
   form: { display: 'flex', flexDirection: 'column', gap: '20px' },
   inputGroup: {
     display: 'flex',
@@ -113,11 +113,11 @@ const styles = {
     border: '1px solid #1a1a1a',
     padding: '0 15px'
   },
-  icon: { color: '#087ca7' },
+  icon: { color: '#fff' },
   input: {
     background: 'transparent',
     border: 'none',
-    color: '#e8f1f2',
+    color: '#fff',
     padding: '15px',
     width: '100%',
     outline: 'none',
@@ -129,11 +129,11 @@ const styles = {
     justifyContent: 'center',
     gap: '8px',
     fontSize: '12px',
-    color: '#04f06a',
+    color: '#fff',
     fontWeight: '700'
   },
   button: {
-    background: '#04f06a',
+    background: '#fff',
     color: '#000',
     padding: '15px',
     borderRadius: '2px',
@@ -146,7 +146,7 @@ const styles = {
   link: {
     display: 'inline-block',
     marginTop: '25px',
-    color: '#087ca7',
+    color: '#aaa',
     fontSize: '12px',
     textDecoration: 'none',
     borderBottom: '1px solid #1a1a1a',

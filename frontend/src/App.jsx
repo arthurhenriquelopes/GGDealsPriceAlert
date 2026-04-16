@@ -1,4 +1,10 @@
+import { useState, useEffect } from 'react'
+import { supabase } from './supabase'
+import Auth from './components/Auth'
+import GroqSetup from './components/GroqSetup'
 import Dashboard from './components/Dashboard'
+import { LogOut, LayoutDashboard, Settings } from 'lucide-react'
+import axios from 'axios'
 
 function App() {
   const [session, setSession] = useState(null)
@@ -47,7 +53,7 @@ function App() {
     <div className="dashboard-layout" style={styles.layout}>
       <nav style={styles.navbar}>
         <div style={styles.navBrand}>
-          <LayoutDashboard size={22} color="#04f06a" />
+          <LayoutDashboard size={22} color="#fff" />
           <span style={styles.brandText}>GGDEALS PRICE ALERT</span>
         </div>
         <div style={{ display: 'flex', gap: '15px' }}>
@@ -62,10 +68,10 @@ function App() {
 
       <main style={styles.main}>
         <header style={styles.header}>
-          <h2>DASHBOARD OVERVIEW</h2>
+          <h2 style={styles.title}>DASHBOARD OVERVIEW</h2>
           <div style={styles.badge}>
             <span style={styles.statusDot}></span>
-            AI ACTIVE: GROQ LINKED
+            AI ACTIVE: <span style={{ color: '#aaa', marginLeft: '5px' }}>GROQ LINKED</span>
           </div>
         </header>
         
@@ -76,19 +82,20 @@ function App() {
 }
 
 const styles = {
-  loader: { height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#0f1113', color: '#10b981' },
-  layout: { minHeight: '100vh', background: '#0f1113', color: '#fff', fontFamily: 'Segoe UI, sans-serif' },
-  navbar: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 40px', background: '#1a1d1f', borderBottom: '1px solid #2f3336' },
+  loader: { height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#000', color: '#fff', fontWeight: '900' },
+  layout: { minHeight: '100vh', background: '#000', color: '#fff', fontFamily: 'Inter, sans-serif' },
+  navbar: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px 40px', background: '#0a0a0a', borderBottom: '1px solid #1a1a1a' },
   navBrand: { display: 'flex', alignItems: 'center', gap: '12px' },
-  brandText: { fontSize: '18px', fontWeight: '800', letterSpacing: '0.5px' },
-  settingsBtn: { background: 'transparent', border: '1px solid #2f3336', color: '#9ca3af', padding: '8px 16px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' },
-  logoutBtn: { background: 'transparent', border: '1px solid #ef4444', color: '#ef4444', padding: '8px 16px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' },
+  brandText: { fontSize: '18px', fontWeight: '900', letterSpacing: '1px' },
+  settingsBtn: { background: 'transparent', border: '1px solid #333', color: '#fff', padding: '8px 16px', borderRadius: '2px', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontWeight: '700' },
+  logoutBtn: { background: 'transparent', border: '1px solid #333', color: '#888', padding: '8px 16px', borderRadius: '2px', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontWeight: '700' },
   main: { padding: '40px' },
-  header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' },
-  badge: { background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', padding: '6px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '8px' },
-  statusDot: { width: '8px', height: '8px', background: '#10b981', borderRadius: '50%' },
-  dashboardGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' },
-  card: { background: '#1a1d1f', padding: '25px', borderRadius: '16px', border: '1px solid #2f3336' }
+  header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' },
+  title: { fontWeight: '900', fontSize: '24px', letterSpacing: '-0.5px' },
+  badge: { border: '1px solid #333', color: '#fff', padding: '6px 16px', borderRadius: '2px', fontSize: '11px', fontWeight: '900', display: 'flex', alignItems: 'center', gap: '8px', textTransform: 'uppercase' },
+  statusDot: { width: '8px', height: '8px', background: '#fff', borderRadius: '0' },
 }
+
+export default App
 
 export default App

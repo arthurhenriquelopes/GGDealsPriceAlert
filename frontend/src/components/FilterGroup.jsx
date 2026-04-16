@@ -55,17 +55,17 @@ const styles = {
     gap: '10px'
   },
   icon: {
-    color: '#087ca7'
+    color: '#fff'
   },
   title: {
     fontSize: '13px',
     fontWeight: '800',
-    color: '#e8f1f2',
+    color: '#fff',
     letterSpacing: '0.5px',
     textTransform: 'uppercase'
   },
   chevron: {
-    color: '#84596b',
+    color: '#888',
     transition: 'transform 0.2s ease'
   },
   content: {
