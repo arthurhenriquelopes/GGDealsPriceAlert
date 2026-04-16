@@ -8,7 +8,6 @@ A high-performance, full-stack automated system to track game deals and historic
 - **Dynamic Indicators**: Visually track high-quality deals with dynamic rating Fire icons (Orange for 6+, Red for 8+).
 - **Premium Email Alerts**: Receive beautifully styled, high-contrast HTML emails with game thumbnails, deep links, and deal insights directly to your inbox.
 - **Automated Workloads**: Headless scraping tasks powered by stealth automation (`scrapling`) deployed via GitHub Actions for daily delivery.
-- **Multi-user Support**: Secure authentication backed by Supabase logic, isolating each user's configuration and secrets.
 - **AI Gatekeeping**: Securely hook your Groq API credentials for downstream AI inference features.
 
 ## 🛠️ Technology Stack
@@ -26,7 +25,7 @@ A high-performance, full-stack automated system to track game deals and historic
 - Java 21
 - Node.js (Latest LTS)
 - Python 3.10+
-- A [Supabase](https://supabase.com/) account for Database and Auth.
+- A [Groq](https://groq.com) account for AI features.
 
 ### Local Setup
 
@@ -41,8 +40,6 @@ A high-performance, full-stack automated system to track game deals and historic
    ```env
    EMAIL_SENDER=your-email@example.com
    EMAIL_PASSWORD=your-app-password
-   SUPABASE_URL=your-project-url
-   SUPABASE_KEY=your-service-role-key
    ```
 
 3. **Backend Setup:**
@@ -65,7 +62,7 @@ A high-performance, full-stack automated system to track game deals and historic
 The `.github/workflows` directory houses action setups for daily cron jobs (`daily_alerts.yml`).
 To ensure your daily digests trigger seamlessly:
 1. Navigate to **Repository Settings > Secrets and variables > Actions**.
-2. Create repository secrets matching `EMAIL_SENDER`, `EMAIL_PASSWORD`, `SUPABASE_URL`, and `SUPABASE_KEY`.
+2. Create repository secrets matching `EMAIL_SENDER` and `EMAIL_PASSWORD`.
 
 ## 📄 License
 

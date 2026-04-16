@@ -1,33 +1,17 @@
 import { useState, useEffect } from 'react'
-import { supabase } from './supabase'
-import Auth from './components/Auth'
 import GroqSetup from './components/GroqSetup'
 import Dashboard from './components/Dashboard'
-import { LogOut, LayoutDashboard, Settings } from 'lucide-react'
+import { LayoutDashboard, Settings } from 'lucide-react'
 import axios from 'axios'
 
 function App() {
-  const [session, setSession] = useState(null)
   const [config, setConfig] = useState(null)
   const [loading, setLoading] = useState(true)
 
+  const defaultUserId = "default-user"
+
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-      if (session) fetchConfig(session.user.id)
-      else setLoading(false)
-    })
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-      if (session) fetchConfig(session.user.id)
-      else {
-        setConfig(null)
-        setLoading(false)
-      }
-    })
-
-    return () => subscription.unsubscribe()
+    fetchConfig(defaultUserId)
   }, [])
 
   const fetchConfig = async (userId) => {
@@ -36,6 +20,7 @@ function App() {
       setConfig(data)
     } catch (e) {
       console.log("No config found for user yet.")
+      // We start with a null config, which triggers Dashboard's default if Groq is set later
       setConfig(null)
     } finally {
       setLoading(false)
@@ -43,10 +28,9 @@ function App() {
   }
 
   if (loading) return <div style={styles.loader}>INITIALIZING SYSTEM...</div>
-  if (!session) return <Auth />
   
   if (!config || !config.groqApiKey) {
-    return <GroqSetup userId={session.user.id} onConfigSaved={(newConfig) => setConfig(newConfig)} />
+    return <GroqSetup userId={defaultUserId} onConfigSaved={(newConfig) => setConfig(newConfig)} />
   }
 
   return (
@@ -60,9 +44,6 @@ function App() {
           <button style={styles.settingsBtn} onClick={() => setConfig(null)}>
             <Settings size={18} /> API KEYS
           </button>
-          <button onClick={() => supabase.auth.signOut()} style={styles.logoutBtn}>
-            <LogOut size={18} /> LOGOUT
-          </button>
         </div>
       </nav>
 
@@ -75,7 +56,7 @@ function App() {
           </div>
         </header>
         
-        <Dashboard userId={session.user.id} initialConfig={config} />
+        <Dashboard userId={defaultUserId} initialConfig={config} />
       </main>
     </div>
   )
@@ -88,7 +69,6 @@ const styles = {
   navBrand: { display: 'flex', alignItems: 'center', gap: '12px' },
   brandText: { fontSize: '18px', fontWeight: '900', letterSpacing: '1px' },
   settingsBtn: { background: 'transparent', border: '1px solid #333', color: '#fff', padding: '8px 16px', borderRadius: '2px', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontWeight: '700' },
-  logoutBtn: { background: 'transparent', border: '1px solid #333', color: '#888', padding: '8px 16px', borderRadius: '2px', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontWeight: '700' },
   main: { padding: '40px' },
   header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' },
   title: { fontWeight: '900', fontSize: '24px', letterSpacing: '-0.5px' },
