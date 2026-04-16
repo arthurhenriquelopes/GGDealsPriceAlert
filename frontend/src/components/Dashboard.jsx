@@ -36,27 +36,31 @@ const STEAM_REVIEWS = [
 ]
 
 export default function Dashboard({ userId, initialConfig }) {
-  const [config, setConfig] = useState(initialConfig || {
-    userId: userId,
-    title: '',
-    minRating: 0,
-    maxRating: 10,
-    minPrice: 0,
-    maxPrice: 100,
-    minDiscount: 0,
-    maxDiscount: 100,
-    onlyHistoricalLow: false,
-    dealsDate: '',
-    releaseDate: '',
-    stores: STORES.map(s => s.id).join(','),
-    drms: DRMS.map(d => d.id).join(','),
-    platforms: '1',
-    subscriptions: '',
-    minMetascore: 0,
-    maxMetascore: 100,
-    steamReviews: '',
-    minHltbCompletionMain: 0,
-    maxHltbCompletionMain: 200
+  const [config, setConfig] = useState(() => {
+    if (initialConfig) return initialConfig;
+    const saved = localStorage.getItem('alert_config');
+    return saved ? JSON.parse(saved) : {
+      userId: userId,
+      title: '',
+      minRating: 0,
+      maxRating: 10,
+      minPrice: 0,
+      maxPrice: 100,
+      minDiscount: 0,
+      maxDiscount: 100,
+      onlyHistoricalLow: false,
+      dealsDate: '',
+      releaseDate: '',
+      stores: STORES.map(s => s.id).join(','),
+      drms: DRMS.map(d => d.id).join(','),
+      platforms: '1',
+      subscriptions: '',
+      minMetascore: 0,
+      maxMetascore: 100,
+      steamReviews: '',
+      minHltbCompletionMain: 0,
+      maxHltbCompletionMain: 200
+    };
   })
   
   const [saving, setSaving] = useState(false)
@@ -66,6 +70,7 @@ export default function Dashboard({ userId, initialConfig }) {
     try {
       const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080'
       await axios.post(`${BASE_URL}/api/config`, config)
+      localStorage.setItem('alert_config', JSON.stringify(config))
       alert('Alert configuration saved successfully!')
     } catch (e) {
       alert('Error saving config: ' + e.message)
