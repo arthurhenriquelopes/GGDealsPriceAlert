@@ -1,9 +1,4 @@
-import { useState, useEffect } from 'react'
-import { supabase } from './supabase'
-import Auth from './components/Auth'
-import GroqSetup from './components/GroqSetup'
-import { LogOut, LayoutDashboard, Settings } from 'lucide-react'
-import axios from 'axios'
+import Dashboard from './components/Dashboard'
 
 function App() {
   const [session, setSession] = useState(null)
@@ -41,10 +36,9 @@ function App() {
     }
   }
 
-  if (loading) return <div style={styles.loader}>Loading your experience...</div>
+  if (loading) return <div style={styles.loader}>INITIALIZING SYSTEM...</div>
   if (!session) return <Auth />
   
-  // Gatekeeper: Bloqueia se não houver Groq API Key
   if (!config || !config.groqApiKey) {
     return <GroqSetup userId={session.user.id} onConfigSaved={(newConfig) => setConfig(newConfig)} />
   }
@@ -53,35 +47,29 @@ function App() {
     <div className="dashboard-layout" style={styles.layout}>
       <nav style={styles.navbar}>
         <div style={styles.navBrand}>
-          <LayoutDashboard size={24} color="#10b981" />
-          <span style={styles.brandText}>GGDeals Price Alert</span>
+          <LayoutDashboard size={22} color="#04f06a" />
+          <span style={styles.brandText}>GGDEALS PRICE ALERT</span>
         </div>
         <div style={{ display: 'flex', gap: '15px' }}>
           <button style={styles.settingsBtn} onClick={() => setConfig(null)}>
-            <Settings size={18} /> API Keys
+            <Settings size={18} /> API KEYS
           </button>
           <button onClick={() => supabase.auth.signOut()} style={styles.logoutBtn}>
-            <LogOut size={18} /> Logout
+            <LogOut size={18} /> LOGOUT
           </button>
         </div>
       </nav>
 
       <main style={styles.main}>
         <header style={styles.header}>
-          <h2>Dashboard</h2>
+          <h2>DASHBOARD OVERVIEW</h2>
           <div style={styles.badge}>
             <span style={styles.statusDot}></span>
-            AI Features Active (Groq Linked)
+            AI ACTIVE: GROQ LINKED
           </div>
         </header>
         
-        <div style={styles.dashboardGrid}>
-          {/* Dashboard components will be ported here */}
-          <div style={styles.card}>
-            <h3>Active Scraper Monitoring</h3>
-            <p style={{ color: '#6b7280' }}>Your personalized alerts are running daily.</p>
-          </div>
-        </div>
+        <Dashboard userId={session.user.id} initialConfig={config} />
       </main>
     </div>
   )
