@@ -1,0 +1,2035 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GGDeals Price Alert — Dashboard</title>
+<meta name="description" content="Configure os filtros do scraper GGDealsPriceAlert">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   DESIGN SYSTEM — Dark Theme inspired by gg.deals
+   ============================================ */
+:root {
+  --bg-primary: #13111c;
+  --bg-secondary: #1a1828;
+  --bg-card: #211f30;
+  --bg-card-hover: #2a2840;
+  --bg-input: #171525;
+  --bg-badge: #2d2b3d;
+  --bg-badge-hover: #3a3850;
+  --bg-badge-active: #4f3de6;
+
+  --text-primary: #e8e6f0;
+  --text-secondary: #9995b0;
+  --text-muted: #6b6780;
+  --text-accent: #a78bfa;
+
+  --accent: #7c3aed;
+  --accent-hover: #6d28d9;
+  --accent-glow: rgba(124, 58, 237, 0.3);
+  --fire: #f97316;
+  --fire-glow: rgba(249, 115, 22, 0.25);
+  --green: #22c55e;
+  --green-glow: rgba(34, 197, 94, 0.2);
+  --red: #ef4444;
+  --blue: #3b82f6;
+  --yellow: #eab308;
+  --cyan: #06b6d4;
+
+  --border: #2e2c40;
+  --border-hover: #43415a;
+
+  --radius: 10px;
+  --radius-sm: 6px;
+  --radius-lg: 14px;
+
+  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.4);
+  --transition: all 0.2s ease;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-secondary); }
+::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ============================================
+   HEADER
+   ============================================ */
+.header {
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, #1e1a35 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(20px);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.header-logo {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--accent), var(--fire));
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 800;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.header-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--text-primary), var(--text-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.header-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), #6d28d9);
+  color: white;
+  box-shadow: 0 2px 16px var(--accent-glow);
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 24px var(--accent-glow);
+}
+
+.btn-secondary {
+  background: var(--bg-badge);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { background: var(--bg-badge-hover); border-color: var(--border-hover); }
+
+.btn-success {
+  background: linear-gradient(135deg, #16a34a, #15803d);
+  color: white;
+  box-shadow: 0 2px 16px var(--green-glow);
+}
+.btn-success:hover { transform: translateY(-1px); box-shadow: 0 4px 24px var(--green-glow); }
+
+.btn-icon {
+  padding: 8px;
+  width: 36px;
+  height: 36px;
+  justify-content: center;
+}
+
+/* ============================================
+   LAYOUT
+   ============================================ */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 24px 120px 24px;
+}
+
+.section {
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title .icon { font-size: 1rem; }
+
+/* ============================================
+   PLATFORM TABS
+   ============================================ */
+.platform-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.platform-tab {
+  padding: 10px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.platform-tab:hover { background: var(--bg-card-hover); border-color: var(--border-hover); color: var(--text-primary); }
+.platform-tab.active { background: var(--bg-badge-active); border-color: var(--accent); color: white; box-shadow: 0 2px 16px var(--accent-glow); }
+
+/* ============================================
+   PRESET BADGES
+   ============================================ */
+.presets-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.preset-badge {
+  padding: 8px 16px;
+  background: var(--bg-badge);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.preset-badge:hover { background: var(--bg-badge-hover); border-color: var(--border-hover); color: var(--text-primary); }
+.preset-badge.active { background: var(--accent); border-color: var(--accent); color: white; box-shadow: 0 2px 12px var(--accent-glow); }
+
+/* ============================================
+   FILTER CARDS GRID
+   ============================================ */
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 16px;
+}
+
+.filter-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.filter-card:hover { border-color: var(--border-hover); }
+
+.filter-card-header {
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  user-select: none;
+}
+
+.filter-card-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-card-toggle {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  transition: var(--transition);
+}
+
+.filter-card.collapsed .filter-card-body { display: none; }
+.filter-card.collapsed .filter-card-toggle { transform: rotate(-90deg); }
+
+.filter-card-body {
+  padding: 16px 18px;
+}
+
+.filter-card.span-2 { grid-column: span 2; }
+
+@media (max-width: 768px) {
+  .filter-card.span-2 { grid-column: span 1; }
+  .filters-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================
+   FORM ELEMENTS
+   ============================================ */
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-group:last-child { margin-bottom: 0; }
+
+.form-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.form-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.form-input {
+  width: 100%;
+  padding: 9px 12px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.85rem;
+  transition: var(--transition);
+  outline: none;
+}
+
+.form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+.form-input::placeholder { color: var(--text-muted); }
+
+.form-select {
+  width: 100%;
+  padding: 9px 12px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.85rem;
+  transition: var(--transition);
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%236b6780' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+
+.form-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+
+/* Range Slider */
+.range-slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  background: var(--bg-input);
+  border-radius: 3px;
+  outline: none;
+  margin: 8px 0;
+}
+
+.range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(135deg, var(--accent), #6d28d9);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 8px var(--accent-glow);
+  transition: var(--transition);
+}
+
+.range-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  box-shadow: 0 2px 16px var(--accent-glow);
+}
+
+.range-value {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--fire);
+  text-shadow: 0 2px 12px var(--fire-glow);
+  margin-bottom: 4px;
+}
+
+.range-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* Toggle/Switch */
+.toggle-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+
+.toggle-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.toggle input { opacity: 0; width: 0; height: 0; }
+
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  transition: var(--transition);
+}
+
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 16px;
+  height: 16px;
+  background: var(--text-muted);
+  border-radius: 50%;
+  transition: var(--transition);
+}
+
+.toggle input:checked + .toggle-slider {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.toggle input:checked + .toggle-slider::before {
+  transform: translateX(20px);
+  background: white;
+}
+
+/* Checkbox Grid */
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 6px;
+  max-height: 260px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.checkbox-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.checkbox-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  background: var(--bg-input);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  user-select: none;
+}
+
+.checkbox-item:hover { background: var(--bg-badge); border-color: var(--border); color: var(--text-primary); }
+.checkbox-item.active { background: rgba(124,58,237,0.15); border-color: var(--accent); color: var(--text-primary); }
+
+.checkbox-item .check-icon {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--border-hover);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: var(--transition);
+  font-size: 0.65rem;
+}
+
+.checkbox-item.active .check-icon {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+/* Radio badges */
+.radio-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.radio-badge {
+  padding: 6px 14px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.radio-badge:hover { background: var(--bg-badge-hover); border-color: var(--border-hover); color: var(--text-primary); }
+.radio-badge.active { background: var(--accent); border-color: var(--accent); color: white; }
+
+/* Sub-tabs inside cards */
+.card-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 14px;
+  gap: 0;
+}
+
+.card-tab {
+  padding: 8px 16px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: var(--transition);
+}
+
+.card-tab:hover { color: var(--text-secondary); }
+.card-tab.active { color: var(--text-accent); border-color: var(--accent); }
+
+.card-tab-content { display: none; }
+.card-tab-content.active { display: block; }
+
+/* Separator line */
+.separator {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 14px 0;
+}
+
+/* ============================================
+   URL PREVIEW BAR (stuck at bottom)
+   ============================================ */
+.url-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(180deg, transparent, var(--bg-secondary) 20%);
+  padding: 20px 32px 16px 32px;
+  z-index: 100;
+}
+
+.url-bar-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.url-preview {
+  flex: 1;
+  padding: 10px 14px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.78rem;
+  color: var(--green);
+  font-family: 'Courier New', monospace;
+  white-space: nowrap;
+  overflow-x: auto;
+  cursor: text;
+}
+
+/* ============================================
+   TOAST NOTIFICATION
+   ============================================ */
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 14px 24px;
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  font-weight: 600;
+  z-index: 9999;
+  transform: translateX(120%);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-lg);
+}
+
+.toast.show { transform: translateX(0); }
+.toast.success { background: linear-gradient(135deg, #16a34a, #15803d); color: white; }
+.toast.error { background: linear-gradient(135deg, var(--red), #dc2626); color: white; }
+.toast.info { background: linear-gradient(135deg, var(--accent), #6d28d9); color: white; }
+
+/* ============================================
+   ACTIVE COUNT BADGE
+   ============================================ */
+.active-count {
+  background: var(--accent);
+  color: white;
+  padding: 1px 7px;
+  border-radius: 10px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  margin-left: 6px;
+}
+
+/* Store section header */
+.store-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.store-section-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.store-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.store-action-btn {
+  font-size: 0.7rem;
+  color: var(--text-accent);
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.store-action-btn:hover { color: var(--accent); }
+
+/* ============================================
+   SCRAPER MODAL
+   ============================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(6px);
+  z-index: 9000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay.show { display: flex; }
+
+.modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  width: 600px;
+  max-width: 90vw;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-lg);
+  animation: modalIn 0.3s ease;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-header {
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title {
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: var(--transition);
+}
+
+.modal-close:hover { background: var(--bg-badge); color: var(--text-primary); }
+
+.modal-body {
+  padding: 18px 22px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.scraper-output {
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  line-height: 1.7;
+  color: var(--green);
+  min-height: 200px;
+  max-height: 400px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.scraper-output.error { color: var(--red); }
+
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border-hover);
+  border-top-color: var(--fire);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.modal-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px;
+  border-top: 1px solid var(--border);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.btn-fire {
+  background: linear-gradient(135deg, var(--fire), #ea580c);
+  color: white;
+  box-shadow: 0 2px 16px var(--fire-glow);
+}
+.btn-fire:hover { transform: translateY(-1px); box-shadow: 0 4px 24px var(--fire-glow); }
+.btn-fire:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+.modal-status.running { color: var(--fire); }
+
+.filter-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-card:hover { border-color: var(--border-hover); transform: translateY(-2px); box-shadow: var(--shadow); }
+
+.filter-card-body {
+  padding: 16px 18px;
+  flex: 1;
+}
+
+/* Custom Checkbox Group Headers */
+.group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.group-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.group-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.group-action-btn {
+  font-size: 0.68rem;
+  color: var(--text-accent);
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.group-action-btn:hover { color: var(--accent); }
+
+/* Premium Scrollbar for grids */
+.checkbox-grid {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-hover) transparent;
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-left">
+    <div class="header-logo">🎮</div>
+    <div>
+      <div class="header-title">GGDeals Price Alert</div>
+      <div class="header-sub">Dashboard de Configuração do Scraper</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-fire" id="btn-run-scraper" onclick="runScraper()" title="Rodar scraper agora e enviar e-mail">🚀 Rodar Scraper</button>
+    <button class="btn btn-secondary" onclick="resetConfig()" title="Resetar filtros">🔄 Reset</button>
+    <button class="btn btn-secondary" onclick="copyUrl()" title="Copiar URL">📋 Copiar URL</button>
+    <button class="btn btn-primary" onclick="saveConfig()">💾 Salvar Config</button>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- PLATFORM FAMILY -->
+  <div class="section">
+    <div class="section-title"><span class="icon">🖥️</span> Plataforma</div>
+    <div class="platform-tabs" id="platform-tabs">
+      <div class="platform-tab" data-value="">🌐 Todas</div>
+      <div class="platform-tab active" data-value="pc">🖥️ PC</div>
+      <div class="platform-tab" data-value="xbox">🟢 Xbox</div>
+      <div class="platform-tab" data-value="playstation">🔵 PlayStation</div>
+      <div class="platform-tab" data-value="nintendo">🔴 Nintendo</div>
+    </div>
+  </div>
+
+  <!-- PRESETS -->
+  <div class="section">
+    <div class="section-title"><span class="icon">⭐</span> Preset</div>
+    <div class="presets-grid" id="presets-grid">
+      <div class="preset-badge active" data-value="">Best Deals</div>
+      <div class="preset-badge" data-value="new-deals">New Deals</div>
+      <div class="preset-badge" data-value="historical-lows">Historical Lows</div>
+      <div class="preset-badge" data-value="ending-soon">Ending Soon</div>
+      <div class="preset-badge" data-value="at-least-75-off">≥75% Off</div>
+      <div class="preset-badge" data-value="at-least-85-off">≥85% Off</div>
+      <div class="preset-badge" data-value="steam-deals">Steam Deals</div>
+      <div class="preset-badge" data-value="gog-deals">GOG Deals</div>
+      <div class="preset-badge" data-value="epic-games-store-deals">Epic Games Deals</div>
+      <div class="preset-badge" data-value="steam-keys">Steam Keys</div>
+      <div class="preset-badge" data-value="origin-keys">Origin Keys</div>
+      <div class="preset-badge" data-value="uplay-keys">Uplay Keys</div>
+      <div class="preset-badge" data-value="cheap-steam-games">Cheap Steam Games</div>
+      <div class="preset-badge" data-value="microsoft-store-deals">MS Store Deals</div>
+    </div>
+  </div>
+
+  <!-- FILTERS GRID -->
+  <div class="section">
+    <div class="section-title"><span class="icon">🔧</span> Filtros</div>
+    <div class="filters-grid">
+
+      <!-- DEAL RATING -->
+      <div class="filter-card">
+        <div class="filter-card-header" onclick="toggleCard(this)">
+          <div class="filter-card-title">🔥 Deal Rating</div>
+          <span class="filter-card-toggle">▼</span>
+        </div>
+        <div class="filter-card-body">
+          <div class="range-value" id="rating-display">5</div>
+          <input type="range" class="range-slider" id="minRating" min="0" max="10" value="5" step="1"
+            oninput="document.getElementById('rating-display').textContent=this.value; updatePreview()">
+          <div class="range-labels"><span>0</span><span>5</span><span>10</span></div>
+        </div>
+      </div>
+
+      <!-- PRICE -->
+      <div class="filter-card">
+        <div class="filter-card-header" onclick="toggleCard(this)">
+          <div class="filter-card-title">💰 Preço</div>
+          <span class="filter-card-toggle">▼</span>
+        </div>
+        <div class="filter-card-body">
+          <div class="form-row">
+            <div class="form-group" style="flex:1">
+              <label class="form-label">Mínimo (R$)</label>
+              <input type="number" class="form-input" id="minPrice" placeholder="0" min="0" oninput="updatePreview()">
+            </div>
+            <div class="form-group" style="flex:1">
+              <label class="form-label">Máximo (R$)</label>
+              <input type="number" class="form-input" id="maxPrice" placeholder="10000" value="10" min="0" oninput="updatePreview()">
+            </div>
+          </div>
+          <div class="radio-badges" style="margin-top:10px">
+            <span class="radio-badge" onclick="setPrice(0,5)">Até R$5</span>
+            <span class="radio-badge" onclick="setPrice(0,10)">Até R$10</span>
+            <span class="radio-badge" onclick="setPrice(0,20)">Até R$20</span>
+            <span class="radio-badge" onclick="setPrice(0,30)">Até R$30</span>
+            <span class="radio-badge" onclick="setPrice(0,50)">Até R$50</span>
+            <span class="radio-badge" onclick="setPrice(0,100)">Até R$100</span>
+          </div>
+          <hr class="separator">
+          <div class="toggle-group">
+            <span class="toggle-label">🏆 Apenas Historical Low</span>
+            <label class="toggle"><input type="checkbox" id="onlyHistoricalLow" onchange="updatePreview()"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+      </div>
+
+      <!-- DISCOUNT -->
+      <div class="filter-card">
+        <div class="filter-card-header" onclick="toggleCard(this)">
+          <div class="filter-card-title">🏷️ Desconto</div>
+          <span class="filter-card-toggle">▼</span>
+        </div>
+        <div class="filter-card-body">
+          <div class="form-row">
+            <div class="form-group" style="flex:1">
+              <label class="form-label">Mín %</label>
+              <input type="number" class="form-input" id="minDiscount" placeholder="0" min="0" max="100" oninput="updatePreview()">
+            </div>
+            <div class="form-group" style="flex:1">
+              <label class="form-label">Máx %</label>
+              <input type="number" class="form-input" id="maxDiscount" placeholder="100" min="0" max="100" oninput="updatePreview()">
+            </div>
+          </div>
+          <div class="radio-badges" style="margin-top:10px">
+            <span class="radio-badge" onclick="setDiscount(50,100)">≥50%</span>
+            <span class="radio-badge" onclick="setDiscount(66,100)">≥66%</span>
+            <span class="radio-badge" onclick="setDiscount(75,100)">≥75%</span>
+            <span class="radio-badge" onclick="setDiscount(80,100)">≥80%</span>
+            <span class="radio-badge" onclick="setDiscount(85,100)">≥85%</span>
+            <span class="radio-badge" onclick="setDiscount(90,100)">≥90%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SORT -->
+      <div class="filter-card">
+        <div class="filter-card-header" onclick="toggleCard(this)">
+          <div class="filter-card-title">📊 Ordenação</div>
+          <span class="filter-card-toggle">▼</span>
+        </div>
+        <div class="filter-card-body">
+          <select class="form-select" id="sort" onchange="updatePreview()">
+            <option value="date">Data (mais recente)</option>
+            <option value="deal-rating">Deal Rating</option>
+            <option value="price">Preço (menor)</option>
+            <option value="discount">Desconto (maior)</option>
+            <option value="metascore">Metascore</option>
+            <option value="steam-rating">Steam Rating</option>
+            <option value="wishlistsRank">Wishlists (rank)</option>
+            <option value="alertsRank">Alerts (rank)</option>
+            <option value="collectionsRank">Collections (rank)</option>
+            <option value="title">Título (A-Z)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- DEAL DATE -->
+      <div class="filter-card">
+        <div class="filter-card-header" onclick="toggleCard(this)">
+          <div class="filter-card-title">📅 Data do Deal</div>
+          <span class="filter-card-toggle">▼</span>
+        </div>
+        <div class="filter-card-body">
+          <div class="form-group">
+            <label class="form-label">Adicionado em</label>
+            <div class="radio-badges" id="dealsDate-badges">
+              <span class="radio-badge" data-group="dealsDate" data-value="last24h" onclick="toggleRadio(this)">Últimas 24h</span>
+              <span class="radio-badge" data-group="dealsDate" data-value="last48h" onclick="toggleRadio(this)">Últimas 48h</span>
+              <span class="radio-badge" data-group="dealsDate" data-value="lastWeek" onclick="toggleRadio(this)">Última semana</span>
+              <span class="radio-badge" data-group="dealsDate" data-value="lastMonth" onclick="toggleRadio(this)">Último mês</span>
+            </div>
+          </div>
+          <hr class="separator">
+          <div class="form-group">
+            <label class="form-label">Expira em</label>
+            <div class="radio-badges" id="dealsExpiryDate-badges">
+              <span class="radio-badge" data-group="dealsExpiryDate" data-value="within24h" onclick="toggleRadio(this)">Em 24h</span>
+              <span class="radio-badge" data-group="dealsExpiryDate" data-value="within48h" onclick="toggleRadio(this)">Em 48h</span>
+              <span class="radio-badge" data-group="dealsExpiryDate" data-value="withinWeek" onclick="toggleRadio(this)">Em 1 semana</span>
+              <span class="radio-badge" data-group="dealsExpiryDate" data-value="within2Weeks" onclick="toggleRadio(this)">Em 2 semanas</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RELEASE DATE -->
+      <div class="filter-card">
+        <div class="filter-card-header" onclick="toggleCard(this)">
+          <div class="filter-card-title">🗓️ Data de Lançamento</div>
+          <span class="filter-card-toggle">▼</span>
+        </div>
+        <div class="filter-card-body">
+          <div class="radio-badges" id="releaseDate-badges">
+            <span class="radio-badge" data-group="releaseDate" data-value="preorders" onclick="toggleRadio(this)">Pre-orders</span>
+            <span class="radio-badge" data-group="releaseDate" data-value="last30days" onclick="toggleRadio(this)">Últimos 30d</span>
+            <span class="radio-badge" data-group="releaseDate" data-value="last90days" onclick="toggleRadio(this)">Últimos 90d</span>
+            <span class="radio-badge" data-group="releaseDate" data-value="2026" onclick="toggleRadio(this)">2026</span>
+            <span class="radio-badge" data-group="releaseDate" data-value="2025" onclick="toggleRadio(this)">2025</span>
+            <span class="radio-badge" data-group="releaseDate" data-value="2020-2024" onclick="toggleRadio(this)">2020-2024</span>
+            <span class="radio-badge" data-group="releaseDate" data-value="2015-2019" onclick="toggleRadio(this)">2015-2019</span>
+            <span class="radio-badge" data-group="releaseDate" data-value="2010-2014" onclick="toggleRadio(this)">2010-2014</span>
+            <span class="radio-badge" data-group="releaseDate" data-value="2000-2009" onclick="toggleRadio(this)">2000-2009</span>
+            <span class="radio-badge" data-group="releaseDate" data-value="pre2000" onclick="toggleRadio(this)">Pre 2000</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STORES -->
+      <div class="filter-card span-2">
+        <div class="filter-card-header" onclick="toggleCard(this)">
+          <div class="filter-card-title">🏪 Lojas <span class="active-count" id="store-count" style="display:none">0</span></div>
+          <span class="filter-card-toggle">▼</span>
+        </div>
+        <div class="filter-card-body">
+          <div class="card-tabs">
+            <div class="card-tab active" onclick="switchTab(this, 'stores-official')">Lojas Oficiais</div>
+            <div class="card-tab" onclick="switchTab(this, 'stores-keyshops')">Keyshops</div>
+          </div>
+          <div id="stores-official" class="card-tab-content active">
+            <div class="store-section-header">
+              <span class="store-section-title">Lojas oficiais</span>
+              <div class="store-actions">
+                <button class="store-action-btn" onclick="selectAllStores('official')">Todas</button>
+                <button class="store-action-btn" onclick="deselectAllStores('official')">Nenhuma</button>
+              </div>
+            </div>
+            <div class="checkbox-grid cols-3" id="stores-official-grid"></div>
+          </div>
+          <div id="stores-keyshops" class="card-tab-content">
+            <div class="store-section-header">
+              <span class="store-section-title">Keyshops</span>
+              <div class="store-actions">
+                <button class="store-action-btn" onclick="selectAllStores('keyshops')">Todas</button>
+                <button class="store-action-btn" onclick="deselectAllStores('keyshops')">Nenhuma</button>
+              </div>
+            </div>
+            <div class="checkbox-grid cols-3" id="stores-keyshops-grid"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DRM -->
+      <div class="filter-card">
+        <div class="filter-card-header" onclick="toggleCard(this)">
+          <div class="filter-card-title">🔑 DRM <span class="active-count" id="drm-count" style="display:none">0</span></div>
+          <span class="filter-card-toggle">▼</span>
+        </div>
+        <div class="filter-card-body">
+          <div class="group-header">
+            <span class="group-title">Ativadores</span>
+            <div class="group-actions">
+              <button class="group-action-btn" onclick="selectAll('drm')">Todos</button>
+              <button class="group-action-btn" onclick="deselectAll('drm')">Nenhum</button>
+            </div>
+          </div>
+          <div class="checkbox-grid cols-2" id="drm-grid"></div>
+        </div>
+      </div>
+
+      <!-- PLATFORM OS -->
+      <div class="filter-card">
+        <div class="filter-card-header" onclick="toggleCard(this)">
+          <div class="filter-card-title">💻 Sistema / Plataforma <span class="active-count" id="platform-count" style="display:none">0</span></div>
+          <span class="filter-card-toggle">▼</span>
+        </div>
+        <div class="filter-card-body">
+          <div class="group-header">
+            <span class="group-title">Sistemas</span>
+            <div class="group-actions">
+              <button class="group-action-btn" onclick="selectAll('platform')">Todos</button>
+              <button class="group-action-btn" onclick="deselectAll('platform')">Nenhum</button>
+            </div>
+          </div>
+          <div class="checkbox-grid cols-2" id="platform-grid"></div>
+        </div>
+      </div>
+
+      <!-- GENRES -->
+      <div class="filter-card">
+        <div class="filter-card-header" onclick="toggleCard(this)">
+          <div class="filter-card-title">🎭 Gêneros <span class="active-count" id="genre-count" style="display:none">0</span></div>
+          <span class="filter-card-toggle">▼</span>
+        </div>
+        <div class="filter-card-body">
+          <div class="group-header">
+            <span class="group-title">Estilos</span>
+            <div class="group-actions">
+              <button class="group-action-btn" onclick="selectAll('genre')">Todos</button>
+              <button class="group-action-btn" onclick="deselectAll('genre')">Nenhum</button>
+            </div>
+          </div>
+          <div class="checkbox-grid cols-2" id="genre-grid"></div>
+        </div>
+      </div>
+
+      <!-- SUBSCRIPTIONS -->
+      <div class="filter-card">
+        <div class="filter-card-header" onclick="toggleCard(this)">
+          <div class="filter-card-title">📦 Assinaturas <span class="active-count" id="subscription-count" style="display:none">0</span></div>
+          <span class="filter-card-toggle">▼</span>
+        </div>
+        <div class="filter-card-body">
+          <div class="group-header">
+            <span class="group-title">Serviços</span>
+            <div class="group-actions">
+              <button class="group-action-btn" onclick="selectAll('subscription')">Todos</button>
+              <button class="group-action-btn" onclick="deselectAll('subscription')">Nenhum</button>
+            </div>
+          </div>
+          <div class="checkbox-grid cols-2" id="subscription-grid"></div>
+        </div>
+      </div>
+
+      <!-- REVIEWS -->
+      <div class="filter-card span-2">
+        <div class="filter-card-header" onclick="toggleCard(this)">
+          <div class="filter-card-title">⭐ Reviews / Avaliações</div>
+          <span class="filter-card-toggle">▼</span>
+        </div>
+        <div class="filter-card-body">
+          <div class="card-tabs">
+            <div class="card-tab active" onclick="switchTab(this, 'reviews-metacritic')">Metacritic</div>
+            <div class="card-tab" onclick="switchTab(this, 'reviews-opencritic')">OpenCritic</div>
+            <div class="card-tab" onclick="switchTab(this, 'reviews-steam')">Steam</div>
+          </div>
+          <div id="reviews-metacritic" class="card-tab-content active">
+            <div class="form-row">
+              <div class="form-group" style="flex:1"><label class="form-label">Metascore Mín</label><input type="number" class="form-input" id="minMetascore" placeholder="0" min="0" max="100" oninput="updatePreview()"></div>
+              <div class="form-group" style="flex:1"><label class="form-label">Metascore Máx</label><input type="number" class="form-input" id="maxMetascore" placeholder="100" min="0" max="100" oninput="updatePreview()"></div>
+            </div>
+            <hr class="separator">
+            <div class="form-row">
+              <div class="form-group" style="flex:1"><label class="form-label">User Score Mín</label><input type="number" class="form-input" id="minUserscore" placeholder="0" min="0" max="10" step="0.1" oninput="updatePreview()"></div>
+              <div class="form-group" style="flex:1"><label class="form-label">User Score Máx</label><input type="number" class="form-input" id="maxUserscore" placeholder="10" min="0" max="10" step="0.1" oninput="updatePreview()"></div>
+            </div>
+          </div>
+          <div id="reviews-opencritic" class="card-tab-content">
+            <div class="form-group">
+              <label class="form-label">Tier</label>
+              <div class="radio-badges" id="opencriticRating-badges">
+                <span class="radio-badge" data-group="opencriticRating" data-value="4" onclick="toggleRadio(this)">Mighty</span>
+                <span class="radio-badge" data-group="opencriticRating" data-value="3" onclick="toggleRadio(this)">Strong</span>
+                <span class="radio-badge" data-group="opencriticRating" data-value="2" onclick="toggleRadio(this)">Fair</span>
+                <span class="radio-badge" data-group="opencriticRating" data-value="1" onclick="toggleRadio(this)">Weak</span>
+              </div>
+            </div>
+            <hr class="separator">
+            <div class="form-row">
+              <div class="form-group" style="flex:1"><label class="form-label">Average Mín</label><input type="number" class="form-input" id="minOpencriticAverage" placeholder="0" oninput="updatePreview()"></div>
+              <div class="form-group" style="flex:1"><label class="form-label">Average Máx</label><input type="number" class="form-input" id="maxOpencriticAverage" placeholder="100" oninput="updatePreview()"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group" style="flex:1"><label class="form-label">Recommend Mín %</label><input type="number" class="form-input" id="minOpencriticRecommend" placeholder="0" oninput="updatePreview()"></div>
+              <div class="form-group" style="flex:1"><label class="form-label">Recommend Máx %</label><input type="number" class="form-input" id="maxOpencriticRecommend" placeholder="100" oninput="updatePreview()"></div>
+            </div>
+          </div>
+          <div id="reviews-steam" class="card-tab-content">
+            <div class="form-group">
+              <label class="form-label">Steam Reviews</label>
+              <div class="radio-badges" id="steamReviews-badges">
+                <span class="radio-badge" data-group="steamReviews" data-value="9" onclick="toggleRadio(this)">Overwhelm. Positive</span>
+                <span class="radio-badge" data-group="steamReviews" data-value="8" onclick="toggleRadio(this)">Very Positive</span>
+                <span class="radio-badge" data-group="steamReviews" data-value="7" onclick="toggleRadio(this)">Positive</span>
+                <span class="radio-badge" data-group="steamReviews" data-value="6" onclick="toggleRadio(this)">Mostly Positive</span>
+                <span class="radio-badge" data-group="steamReviews" data-value="5" onclick="toggleRadio(this)">Mixed</span>
+              </div>
+            </div>
+            <hr class="separator">
+            <div class="form-row">
+              <div class="form-group" style="flex:1"><label class="form-label">Review Count Mín</label><input type="number" class="form-input" id="minSteamReviewsCount" placeholder="0" oninput="updatePreview()"></div>
+              <div class="form-group" style="flex:1"><label class="form-label">Review Count Máx</label><input type="number" class="form-input" id="maxSteamReviewsCount" placeholder="567000" oninput="updatePreview()"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HLTB -->
+      <div class="filter-card span-2">
+        <div class="filter-card-header" onclick="toggleCard(this)">
+          <div class="filter-card-title">⏱️ How Long To Beat</div>
+          <span class="filter-card-toggle">▼</span>
+        </div>
+        <div class="filter-card-body">
+          <div class="card-tabs">
+            <div class="card-tab active" onclick="switchTab(this, 'hltb-main')">Main Story</div>
+            <div class="card-tab" onclick="switchTab(this, 'hltb-plus')">Main+Extras</div>
+            <div class="card-tab" onclick="switchTab(this, 'hltb-100')">Completionist</div>
+            <div class="card-tab" onclick="switchTab(this, 'hltb-all')">All Styles</div>
+          </div>
+          <div id="hltb-main" class="card-tab-content active">
+            <div class="form-row">
+              <div class="form-group" style="flex:1"><label class="form-label">Mín (horas)</label><input type="number" class="form-input" id="minHltbCompletionMain" placeholder="0" oninput="updatePreview()"></div>
+              <div class="form-group" style="flex:1"><label class="form-label">Máx (horas)</label><input type="number" class="form-input" id="maxHltbCompletionMain" placeholder="200" oninput="updatePreview()"></div>
+            </div>
+          </div>
+          <div id="hltb-plus" class="card-tab-content">
+            <div class="form-row">
+              <div class="form-group" style="flex:1"><label class="form-label">Mín (horas)</label><input type="number" class="form-input" id="minHltbCompletionPlus" placeholder="0" oninput="updatePreview()"></div>
+              <div class="form-group" style="flex:1"><label class="form-label">Máx (horas)</label><input type="number" class="form-input" id="maxHltbCompletionPlus" placeholder="200" oninput="updatePreview()"></div>
+            </div>
+          </div>
+          <div id="hltb-100" class="card-tab-content">
+            <div class="form-row">
+              <div class="form-group" style="flex:1"><label class="form-label">Mín (horas)</label><input type="number" class="form-input" id="minHltbCompletion100" placeholder="0" oninput="updatePreview()"></div>
+              <div class="form-group" style="flex:1"><label class="form-label">Máx (horas)</label><input type="number" class="form-input" id="maxHltbCompletion100" placeholder="200" oninput="updatePreview()"></div>
+            </div>
+          </div>
+          <div id="hltb-all" class="card-tab-content">
+            <div class="form-row">
+              <div class="form-group" style="flex:1"><label class="form-label">Mín (horas)</label><input type="number" class="form-input" id="minHltbCompletionAll" placeholder="0" oninput="updatePreview()"></div>
+              <div class="form-group" style="flex:1"><label class="form-label">Máx (horas)</label><input type="number" class="form-input" id="maxHltbCompletionAll" placeholder="200" oninput="updatePreview()"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- USER FILTERS -->
+      <div class="filter-card">
+        <div class="filter-card-header" onclick="toggleCard(this)">
+          <div class="filter-card-title">👤 Filtros de Usuário</div>
+          <span class="filter-card-toggle">▼</span>
+        </div>
+        <div class="filter-card-body">
+          <p style="font-size:0.72rem;color:var(--text-muted);margin-bottom:12px;">⚠️ Requer login no gg.deals (via cookies do scraper)</p>
+          <div class="form-group"><label class="form-label">Wishlist</label>
+            <select class="form-select" id="wishlisted" onchange="updatePreview()"><option value="">Mostrar todos</option><option value="only">Apenas da wishlist</option><option value="hide">Esconder da wishlist</option></select>
+          </div>
+          <div class="form-group"><label class="form-label">Alerts</label>
+            <select class="form-select" id="alerted" onchange="updatePreview()"><option value="">Mostrar todos</option><option value="only">Apenas com alerta</option><option value="hide">Esconder com alerta</option></select>
+          </div>
+          <div class="form-group"><label class="form-label">Collection</label>
+            <select class="form-select" id="owned" onchange="updatePreview()"><option value="">Mostrar todos</option><option value="only">Apenas possuídos</option><option value="hide">Esconder possuídos</option></select>
+          </div>
+          <div class="form-group"><label class="form-label">Ignorelist</label>
+            <select class="form-select" id="ignored" onchange="updatePreview()"><option value="">Esconder ignorados</option><option value="show">Mostrar ignorados</option><option value="only">Apenas ignorados</option></select>
+          </div>
+        </div>
+      </div>
+
+      <!-- RANKING FILTERS -->
+      <div class="filter-card">
+        <div class="filter-card-header" onclick="toggleCard(this)">
+          <div class="filter-card-title">📈 Rankings</div>
+          <span class="filter-card-toggle">▼</span>
+        </div>
+        <div class="filter-card-body">
+          <div class="form-group"><label class="form-label">Wishlist Rank</label>
+            <div class="radio-badges" id="wishlistsRank-badges">
+              <span class="radio-badge" data-group="wishlistsRank" data-value="top100" onclick="toggleRadio(this)">Top 100</span>
+              <span class="radio-badge" data-group="wishlistsRank" data-value="top250" onclick="toggleRadio(this)">Top 250</span>
+              <span class="radio-badge" data-group="wishlistsRank" data-value="top500" onclick="toggleRadio(this)">Top 500</span>
+              <span class="radio-badge" data-group="wishlistsRank" data-value="top1000" onclick="toggleRadio(this)">Top 1000</span>
+            </div>
+          </div>
+          <hr class="separator">
+          <div class="form-group"><label class="form-label">Alerts Rank</label>
+            <div class="radio-badges" id="alertsRank-badges">
+              <span class="radio-badge" data-group="alertsRank" data-value="top100" onclick="toggleRadio(this)">Top 100</span>
+              <span class="radio-badge" data-group="alertsRank" data-value="top250" onclick="toggleRadio(this)">Top 250</span>
+              <span class="radio-badge" data-group="alertsRank" data-value="top500" onclick="toggleRadio(this)">Top 500</span>
+              <span class="radio-badge" data-group="alertsRank" data-value="top1000" onclick="toggleRadio(this)">Top 1000</span>
+            </div>
+          </div>
+          <hr class="separator">
+          <div class="form-group"><label class="form-label">Collections Rank</label>
+            <div class="radio-badges" id="collectionsRank-badges">
+              <span class="radio-badge" data-group="collectionsRank" data-value="top100" onclick="toggleRadio(this)">Top 100</span>
+              <span class="radio-badge" data-group="collectionsRank" data-value="top250" onclick="toggleRadio(this)">Top 250</span>
+              <span class="radio-badge" data-group="collectionsRank" data-value="top500" onclick="toggleRadio(this)">Top 500</span>
+              <span class="radio-badge" data-group="collectionsRank" data-value="top1000" onclick="toggleRadio(this)">Top 1000</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCRAPER SETTINGS -->
+      <div class="filter-card">
+        <div class="filter-card-header" onclick="toggleCard(this)">
+          <div class="filter-card-title">⚙️ Config do Scraper</div>
+          <span class="filter-card-toggle">▼</span>
+        </div>
+        <div class="filter-card-body">
+          <div class="form-group">
+            <label class="form-label">E-mail destinatário</label>
+            <input type="email" class="form-input" id="emailReceiver" placeholder="seu@email.com" value="arthurhenriquelopesf@gmail.com">
+          </div>
+          <div class="form-row">
+            <div class="form-group" style="flex:1">
+              <label class="form-label">Intervalo (horas)</label>
+              <input type="number" class="form-input" id="checkInterval" value="24" min="1">
+            </div>
+            <div class="form-group" style="flex:1">
+              <label class="form-label">Janela de tempo (horas)</label>
+              <input type="number" class="form-input" id="timeWindow" value="24" min="1">
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- URL PREVIEW BAR -->
+<div class="url-bar">
+  <div class="url-bar-inner">
+    <span style="font-size:0.78rem;color:var(--text-muted);font-weight:600;white-space:nowrap;">🔗 URL:</span>
+    <div class="url-preview" id="url-preview">https://gg.deals/deals/pc/</div>
+    <button class="btn btn-secondary btn-icon" onclick="copyUrl()" title="Copiar">📋</button>
+    <button class="btn btn-success" onclick="saveConfig()">💾 Salvar</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- SCRAPER MODAL -->
+<div class="modal-overlay" id="scraper-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="scraper-modal-title">
+        <span class="spinner" id="scraper-spinner"></span>
+        Executando Scraper...
+      </div>
+      <button class="modal-close" onclick="closeScraperModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="scraper-output" id="scraper-output">Iniciando scraper com os filtros atuais...
+Isso pode levar alguns minutos (Cloudflare bypass + scraping das p\u00e1ginas).</div>
+    </div>
+    <div class="modal-status running" id="scraper-status">
+      <span class="spinner"></span>
+      <span id="scraper-status-text">Aguardando resposta do scraper...</span>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================
+   DATA — mirrors gg.deals filter IDs
+   ============================================ */
+const STORES_OFFICIAL = [
+  {id:43,name:"2Game"},{id:52,name:"Allyouplay"},{id:22,name:"Battle.net"},
+  {id:110,name:"Game Pass Deals"},{id:49,name:"Dreamgame"},{id:5,name:"EA.com"},
+  {id:57,name:"Epic Games Store"},{id:40,name:"Fanatical"},{id:45,name:"Gamebillet"},
+  {id:8,name:"GamersGate"},{id:111,name:"Gamerthor"},{id:76,name:"GAMESLOAD"},
+  {id:16,name:"Gamesplanet DE"},{id:17,name:"Gamesplanet FR"},{id:18,name:"Gamesplanet UK"},
+  {id:53,name:"Gamesplanet US"},{id:126,name:"Gamesporium"},{id:10,name:"GOG.com"},
+  {id:3,name:"Green Man Gaming"},{id:20,name:"Humble Store"},{id:127,name:"Hype.games"},
+  {id:54,name:"Indie Gala Store"},{id:80,name:"JoyBuggy"},{id:72,name:"Microsoft Store"},
+  {id:56,name:"Nuuvem"},{id:121,name:"Planetplay"},{id:125,name:"Player.land"},
+  {id:114,name:"Playsum"},{id:1169,name:"Rockstar Store"},{id:91,name:"Startselect"},
+  {id:4,name:"Steam"},{id:38,name:"Ubisoft Store"},{id:41,name:"Voidu"},{id:14,name:"WinGameStore"}
+];
+
+const STORES_KEYSHOPS = [
+  {id:115,name:"Difmark"},{id:98,name:"Driffle"},{id:124,name:"Eldorado.gg"},
+  {id:60,name:"Eneba"},{id:58,name:"G2A"},{id:62,name:"G2Play"},
+  {id:122,name:"GameBoost"},{id:100,name:"GAMESEAL"},{id:63,name:"GAMIVO"},
+  {id:70,name:"HRK Game"},{id:64,name:"Instant Gaming"},{id:79,name:"K4G.com"},
+  {id:113,name:"Keycense"},{id:61,name:"Kinguin"},{id:59,name:"Loaded"},
+  {id:101,name:"MTCGame"},{id:97,name:"Play-Asia"},{id:108,name:"PremiumCDKeys"},
+  {id:83,name:"Yuplay"}
+];
+
+const DRMS = [
+  {id:1,name:"Steam"},{id:2,name:"EA App"},{id:4,name:"Ubisoft Connect"},
+  {id:8,name:"GOG"},{id:1024,name:"Epic Games"},{id:128,name:"Microsoft Store"},
+  {id:64,name:"Battle.net"},{id:8192,name:"Rockstar"},{id:16,name:"DRM Free"},{id:32,name:"Other"}
+];
+
+const PLATFORMS = [
+  {id:1,name:"Windows"},{id:2,name:"Mac"},{id:4,name:"Linux"},
+  {id:2048,name:"Steam Deck Verified"},{id:4096,name:"Steam Deck Playable"},
+  {id:8192,name:"Steam Deck Unsupported"},{id:16384,name:"PC VR"},{id:65536,name:"GeForce Now"}
+];
+
+const GENRES = [
+  {id:4,name:"Action"},{id:7,name:"Adventure"},{id:10,name:"Casual"},
+  {id:3,name:"Early Access"},{id:11,name:"Free to Play"},{id:1,name:"Indie"},
+  {id:16,name:"MMO"},{id:8,name:"Racing"},{id:5,name:"RPG"},
+  {id:2,name:"Simulation"},{id:9,name:"Sports"},{id:6,name:"Strategy"}
+];
+
+const SUBSCRIPTIONS = [
+  {id:108819,name:"EA Play"},{id:109049,name:"EA Play Steam"},
+  {id:432092,name:"Game Pass Essential"},{id:432412,name:"Game Pass Premium"},
+  {id:116734,name:"Game Pass Ultimate"},{id:108665,name:"PC Game Pass"},
+  {id:271253,name:"Ubisoft+ Classics"},{id:323424,name:"Ubisoft+ Premium"}
+];
+
+/* ============================================
+   STATE
+   ============================================ */
+let config = {};
+let selectedStores = [];
+let selectedDrms = [1]; // Steam default
+let selectedPlatforms = [];
+let selectedGenres = [];
+let selectedSubscriptions = [];
+let radioValues = {};
+
+/* ============================================
+   INIT
+   ============================================ */
+document.addEventListener("DOMContentLoaded", () => {
+  renderCheckboxGrids();
+  setupPlatformTabs();
+  setupPresets();
+  setupAutoSync();
+  loadConfig();
+});
+
+function setupAutoSync() {
+  // Faz com que qualquer input ou select atualize o preview automaticamente
+  document.querySelectorAll(".form-input, .form-select, .range-slider").forEach(el => {
+    el.addEventListener("input", updatePreview);
+  });
+  document.querySelectorAll('input[type="checkbox"]').forEach(el => {
+    el.addEventListener("change", updatePreview);
+  });
+}
+
+function renderCheckboxGrids() {
+  renderGrid("stores-official-grid", STORES_OFFICIAL, "store");
+  renderGrid("stores-keyshops-grid", STORES_KEYSHOPS, "store");
+  renderGrid("drm-grid", DRMS, "drm");
+  renderGrid("platform-grid", PLATFORMS, "platform");
+  renderGrid("genre-grid", GENRES, "genre");
+  renderGrid("subscription-grid", SUBSCRIPTIONS, "subscription");
+}
+
+function renderGrid(containerId, items, type) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = items.map(item => `
+    <div class="checkbox-item" data-type="${type}" data-id="${item.id}" onclick="toggleCheckbox(this)">
+      <span class="check-icon">✓</span>
+      <span>${item.name}</span>
+    </div>
+  `).join("");
+}
+
+function setupPlatformTabs() {
+  document.querySelectorAll("#platform-tabs .platform-tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      document.querySelectorAll("#platform-tabs .platform-tab").forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+      updatePreview();
+    });
+  });
+}
+
+function setupPresets() {
+  document.querySelectorAll("#presets-grid .preset-badge").forEach(badge => {
+    badge.addEventListener("click", () => {
+      document.querySelectorAll("#presets-grid .preset-badge").forEach(b => b.classList.remove("active"));
+      badge.classList.add("active");
+      updatePreview();
+    });
+  });
+}
+
+/* ============================================
+   CONFIG LOAD / SAVE
+   ============================================ */
+async function loadConfig() {
+  try {
+    const resp = await fetch("/api/config");
+    if (resp.ok) {
+      config = await resp.json();
+      applyConfigToUI(config);
+      showToast("Configuração carregada!", "info");
+    }
+  } catch {
+    // Fallback — if no server, use defaults
+    console.log("Server não encontrado, usando defaults.");
+    updatePreview();
+  }
+}
+
+function applyConfigToUI(cfg) {
+  // Platform
+  const pf = cfg.platform_family || "";
+  document.querySelectorAll("#platform-tabs .platform-tab").forEach(t => {
+    t.classList.toggle("active", t.dataset.value === pf);
+  });
+
+  // Preset
+  const preset = cfg.preset || "";
+  document.querySelectorAll("#presets-grid .preset-badge").forEach(b => {
+    b.classList.toggle("active", b.dataset.value === preset);
+  });
+
+  const f = cfg.filters || {};
+
+  // Simple inputs
+  setVal("minRating", f.minRating);
+  if (f.minRating != null) document.getElementById("rating-display").textContent = f.minRating;
+  setVal("minPrice", f.minPrice);
+  setVal("maxPrice", f.maxPrice);
+  setVal("minDiscount", f.minDiscount);
+  setVal("maxDiscount", f.maxDiscount);
+  setVal("sort", f.sort || "date");
+  setChecked("onlyHistoricalLow", f.onlyHistoricalLow);
+
+  // User filters
+  setVal("wishlisted", f.wishlisted || "");
+  setVal("alerted", f.alerted || "");
+  setVal("owned", f.owned || "");
+  setVal("ignored", f.ignored || "");
+
+  // Reviews
+  setVal("minMetascore", f.minMetascore);
+  setVal("maxMetascore", f.maxMetascore);
+  setVal("minUserscore", f.minUserscore);
+  setVal("maxUserscore", f.maxUserscore);
+  setVal("minOpencriticAverage", f.minOpencriticAverage);
+  setVal("maxOpencriticAverage", f.maxOpencriticAverage);
+  setVal("minOpencriticRecommend", f.minOpencriticRecommend);
+  setVal("maxOpencriticRecommend", f.maxOpencriticRecommend);
+  setVal("minSteamReviewsCount", f.minSteamReviewsCount);
+  setVal("maxSteamReviewsCount", f.maxSteamReviewsCount);
+
+  // HLTB
+  setVal("minHltbCompletionMain", f.minHltbCompletionMain);
+  setVal("maxHltbCompletionMain", f.maxHltbCompletionMain);
+  setVal("minHltbCompletionPlus", f.minHltbCompletionPlus);
+  setVal("maxHltbCompletionPlus", f.maxHltbCompletionPlus);
+  setVal("minHltbCompletion100", f.minHltbCompletion100);
+  setVal("maxHltbCompletion100", f.maxHltbCompletion100);
+  setVal("minHltbCompletionAll", f.minHltbCompletionAll);
+  setVal("maxHltbCompletionAll", f.maxHltbCompletionAll);
+
+  // Radio badges
+  ["dealsDate","dealsExpiryDate","releaseDate","opencriticRating","steamReviews","wishlistsRank","alertsRank","collectionsRank"].forEach(group => {
+    radioValues[group] = f[group] || null;
+    document.querySelectorAll(`[data-group="${group}"]`).forEach(b => {
+      b.classList.toggle("active", b.dataset.value === f[group]);
+    });
+  });
+
+  // Checkboxes (stores, drm, platform, genre, subscription)
+  selectedStores = Array.isArray(f.store) ? [...f.store] : [];
+  selectedDrms = Array.isArray(f.drm) ? [...f.drm] : [1];
+  selectedPlatforms = Array.isArray(f.platform) ? [...f.platform] : [];
+  selectedGenres = Array.isArray(f.genre) ? [...f.genre] : [];
+  selectedSubscriptions = Array.isArray(f.subscription) ? [...f.subscription] : [];
+
+  refreshCheckboxes("store", selectedStores);
+  refreshCheckboxes("drm", selectedDrms);
+  refreshCheckboxes("platform", selectedPlatforms);
+  refreshCheckboxes("genre", selectedGenres);
+  refreshCheckboxes("subscription", selectedSubscriptions);
+
+  // Scraper settings
+  if (cfg.email) setVal("emailReceiver", cfg.email.receiver);
+  if (cfg.scraper) {
+    setVal("checkInterval", cfg.scraper.check_interval_hours);
+    setVal("timeWindow", cfg.scraper.time_window_hours);
+  }
+
+  updatePreview();
+}
+
+function refreshCheckboxes(type, selectedIds) {
+  document.querySelectorAll(`.checkbox-item[data-type="${type}"]`).forEach(el => {
+    el.classList.toggle("active", selectedIds.includes(parseInt(el.dataset.id)));
+  });
+  updateCheckboxCount(type);
+}
+
+async function saveConfig() {
+  const cfg = buildConfigFromUI();
+  try {
+    const resp = await fetch("/api/config", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(cfg, null, 2)
+    });
+    if (resp.ok) {
+      showToast("✅ Configuração salva com sucesso!", "success");
+    } else {
+      throw new Error("Erro ao salvar");
+    }
+  } catch {
+    // Fallback: download
+    const blob = new Blob([JSON.stringify(cfg, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = "config.json"; a.click();
+    URL.revokeObjectURL(url);
+    showToast("📁 Config baixado como arquivo (servidor offline)", "info");
+  }
+}
+
+function buildConfigFromUI() {
+  const platform = document.querySelector("#platform-tabs .platform-tab.active")?.dataset.value || "";
+  const preset = document.querySelector("#presets-grid .preset-badge.active")?.dataset.value || "";
+
+  const filters = {};
+  const addIfSet = (id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (el.type === "checkbox") {
+      if (el.checked) filters[id] = true;
+    } else if (el.tagName === "SELECT") {
+      if (el.value) filters[id] = el.value;
+    } else {
+      const v = el.value;
+      if (v !== "" && v != null) filters[id] = isNaN(v) ? v : parseFloat(v);
+    }
+  };
+
+  // Simple params
+  ["minRating","minPrice","maxPrice","minDiscount","maxDiscount",
+   "minMetascore","maxMetascore","minUserscore","maxUserscore",
+   "minOpencriticAverage","maxOpencriticAverage","minOpencriticRecommend","maxOpencriticRecommend",
+   "minSteamReviewsCount","maxSteamReviewsCount",
+   "minHltbCompletionMain","maxHltbCompletionMain","minHltbCompletionPlus","maxHltbCompletionPlus",
+   "minHltbCompletion100","maxHltbCompletion100","minHltbCompletionAll","maxHltbCompletionAll"
+  ].forEach(addIfSet);
+
+  addIfSet("onlyHistoricalLow");
+  addIfSet("sort");
+  addIfSet("wishlisted");
+  addIfSet("alerted");
+  addIfSet("owned");
+  addIfSet("ignored");
+
+  // Radio groups
+  ["dealsDate","dealsExpiryDate","releaseDate","opencriticRating","steamReviews",
+   "wishlistsRank","alertsRank","collectionsRank"].forEach(g => {
+    if (radioValues[g]) filters[g] = radioValues[g];
+  });
+
+  // Checkbox lists
+  if (selectedStores.length) filters.store = selectedStores;
+  if (selectedDrms.length) filters.drm = selectedDrms;
+  if (selectedPlatforms.length) filters.platform = selectedPlatforms;
+  if (selectedGenres.length) filters.genre = selectedGenres;
+  if (selectedSubscriptions.length) filters.subscription = selectedSubscriptions;
+
+  // Ensure sort default
+  if (!filters.sort) filters.sort = "date";
+
+  return {
+    platform_family: platform,
+    preset: preset,
+    filters: filters,
+    email: {
+      receiver: document.getElementById("emailReceiver")?.value || ""
+    },
+    scraper: {
+      check_interval_hours: parseInt(document.getElementById("checkInterval")?.value) || 24,
+      time_window_hours: parseInt(document.getElementById("timeWindow")?.value) || 24
+    }
+  };
+}
+
+function resetConfig() {
+  if (!confirm("Resetar todos os filtros para os valores padrão?")) return;
+  config = {
+    platform_family: "pc", preset: "",
+    filters: { minRating: 5, maxPrice: 10, drm: [1], sort: "date" },
+    email: { receiver: "arthurhenriquelopesf@gmail.com" },
+    scraper: { check_interval_hours: 24, time_window_hours: 24 }
+  };
+  radioValues = {};
+  selectedStores = [];
+  selectedDrms = [1];
+  selectedPlatforms = [];
+  selectedGenres = [];
+  selectedSubscriptions = [];
+  applyConfigToUI(config);
+  showToast("🔄 Filtros resetados!", "info");
+}
+
+/* ============================================
+   UI INTERACTIONS
+   ============================================ */
+function toggleCard(header) {
+  header.closest(".filter-card").classList.toggle("collapsed");
+}
+
+function switchTab(tabEl, contentId) {
+  const parent = tabEl.closest(".filter-card-body");
+  parent.querySelectorAll(".card-tab").forEach(t => t.classList.remove("active"));
+  parent.querySelectorAll(".card-tab-content").forEach(c => c.classList.remove("active"));
+  tabEl.classList.add("active");
+  document.getElementById(contentId).classList.add("active");
+}
+
+function toggleCheckbox(el) {
+  const type = el.dataset.type;
+  const id = parseInt(el.dataset.id);
+  el.classList.toggle("active");
+
+  const getList = () => {
+    if (type === "store") return selectedStores;
+    if (type === "drm") return selectedDrms;
+    if (type === "platform") return selectedPlatforms;
+    if (type === "genre") return selectedGenres;
+    if (type === "subscription") return selectedSubscriptions;
+  };
+
+  const list = getList();
+  const idx = list.indexOf(id);
+  if (idx >= 0) list.splice(idx, 1);
+  else list.push(id);
+
+  updateCheckboxCount(type);
+  updatePreview();
+}
+
+function updateCheckboxCount(type) {
+  const countEl = document.getElementById(`${type}-count`);
+  if (!countEl) return;
+  const list = type === "store" ? selectedStores :
+               type === "drm" ? selectedDrms :
+               type === "platform" ? selectedPlatforms :
+               type === "genre" ? selectedGenres :
+               selectedSubscriptions;
+  if (list.length > 0) {
+    countEl.textContent = list.length;
+    countEl.style.display = "inline";
+  } else {
+    countEl.style.display = "none";
+  }
+}
+
+function toggleRadio(el) {
+  const group = el.dataset.group;
+  const value = el.dataset.value;
+  const isActive = el.classList.contains("active");
+
+  document.querySelectorAll(`[data-group="${group}"]`).forEach(b => b.classList.remove("active"));
+
+  if (isActive) {
+    radioValues[group] = null;
+  } else {
+    el.classList.add("active");
+    radioValues[group] = value;
+  }
+  updatePreview();
+}
+
+function setPrice(min, max) {
+  document.getElementById("minPrice").value = min || "";
+  document.getElementById("maxPrice").value = max;
+  updatePreview();
+}
+
+function setDiscount(min, max) {
+  document.getElementById("minDiscount").value = min;
+  document.getElementById("maxDiscount").value = max;
+  updatePreview();
+}
+
+function selectAllStores(type) {
+  const ids = (type === "official" ? STORES_OFFICIAL : STORES_KEYSHOPS).map(s => s.id);
+  ids.forEach(id => {
+    if (!selectedStores.includes(id)) selectedStores.push(id);
+  });
+  refreshCheckboxes("store", selectedStores);
+  updatePreview();
+}
+
+function deselectAllStores(type) {
+  const ids = (type === "official" ? STORES_OFFICIAL : STORES_KEYSHOPS).map(s => s.id);
+  selectedStores = selectedStores.filter(id => !ids.includes(id));
+  refreshCheckboxes("store", selectedStores);
+  updatePreview();
+}
+
+function selectAll(type) {
+  const data = type === 'drm' ? DRMS :
+               type === 'platform' ? PLATFORMS :
+               type === 'genre' ? GENRES :
+               SUBSCRIPTIONS;
+  const list = type === 'drm' ? selectedDrms :
+               type === 'platform' ? selectedPlatforms :
+               type === 'genre' ? selectedGenres :
+               selectedSubscriptions;
+  
+  data.forEach(item => {
+    if (!list.includes(item.id)) list.push(item.id);
+  });
+  refreshCheckboxes(type, list);
+  updatePreview();
+}
+
+function deselectAll(type) {
+  if (type === 'drm') selectedDrms = [];
+  else if (type === 'platform') selectedPlatforms = [];
+  else if (type === 'genre') selectedGenres = [];
+  else if (type === 'subscription') selectedSubscriptions = [];
+  
+  refreshCheckboxes(type, []);
+  updatePreview();
+}
+
+/* ============================================
+   URL BUILDER
+   ============================================ */
+function updatePreview() {
+  const cfg = buildConfigFromUI();
+  const url = buildUrl(cfg);
+  document.getElementById("url-preview").textContent = url;
+}
+
+function buildUrl(cfg) {
+  const parts = ["https://gg.deals/deals"];
+  if (cfg.platform_family) parts.push(cfg.platform_family);
+  if (cfg.preset) parts.push(cfg.preset);
+  let base = parts.join("/") + "/";
+
+  const params = new URLSearchParams();
+  const f = cfg.filters;
+
+  // Simple params
+  const simpleKeys = [
+    "minRating","maxRating","minPrice","maxPrice","minDiscount","maxDiscount",
+    "dealsDate","dealsExpiryDate","releaseDate","steamReviews","opencriticRating",
+    "minMetascore","maxMetascore","minUserscore","maxUserscore",
+    "minOpencriticAverage","maxOpencriticAverage","minOpencriticRecommend","maxOpencriticRecommend",
+    "minSteamReviewsCount","maxSteamReviewsCount",
+    "minHltbCompletionMain","maxHltbCompletionMain","minHltbCompletionPlus","maxHltbCompletionPlus",
+    "minHltbCompletion100","maxHltbCompletion100","minHltbCompletionAll","maxHltbCompletionAll",
+    "wishlistsRank","alertsRank","collectionsRank","wishlisted","alerted","owned","ignored"
+  ];
+
+  simpleKeys.forEach(k => {
+    if (f[k] != null && f[k] !== "" && f[k] !== false) params.set(k, f[k]);
+  });
+
+  if (f.onlyHistoricalLow) params.set("onlyHistoricalLow", "1");
+  if (f.sort && f.sort !== "date") params.set("sort", f.sort);
+
+  // List params
+  if (f.store?.length) params.set("store", f.store.join(","));
+  if (f.drm?.length) params.set("drm", f.drm.join(","));
+  if (f.platform?.length) params.set("platform", f.platform.join(","));
+  if (f.genre?.length) params.set("genre", f.genre.join(","));
+  if (f.subscription?.length) params.set("subscription", f.subscription.join(","));
+
+  const qs = params.toString();
+  return qs ? `${base}?${qs}` : base;
+}
+
+/* ============================================
+   HELPERS
+   ============================================ */
+function setVal(id, val) {
+  const el = document.getElementById(id);
+  if (!el || val == null) return;
+  el.value = val;
+}
+
+function setChecked(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.checked = !!val;
+}
+
+function copyUrl() {
+  const url = document.getElementById("url-preview").textContent;
+  navigator.clipboard.writeText(url).then(() => showToast("📋 URL copiada!", "success"));
+}
+
+function showToast(msg, type = "info") {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove("show"), 3000);
+}
+
+/* ============================================
+   SCRAPER EXECUTION
+   ============================================ */
+let scraperPollingInterval = null;
+
+async function runScraper() {
+  const btn = document.getElementById("btn-run-scraper");
+
+  // Primeiro salva a config atual
+  const cfg = buildConfigFromUI();
+
+  // Verifica se tem e-mail configurado
+  if (!cfg.email.receiver) {
+    showToast("Configure o e-mail destinatario antes de rodar!", "error");
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Rodando...';
+
+  // Abre o modal
+  document.getElementById("scraper-modal").classList.add("show");
+  document.getElementById("scraper-output").textContent = "Iniciando scraper com os filtros atuais...\nIsso pode levar alguns minutos (Cloudflare bypass + scraping).\n";
+  document.getElementById("scraper-output").classList.remove("error");
+  document.getElementById("scraper-modal-title").innerHTML = '<span class="spinner"></span> Executando Scraper...';
+  document.getElementById("scraper-spinner");
+  const statusEl = document.getElementById("scraper-status");
+  statusEl.className = "modal-status running";
+  document.getElementById("scraper-status-text").textContent = "Aguardando resposta do scraper...";
+
+  try {
+    const resp = await fetch("/api/run-scraper", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(cfg)
+    });
+
+    const data = await resp.json();
+
+    if (resp.status === 409) {
+      showToast(data.message, "error");
+      btn.disabled = false;
+      btn.innerHTML = '🚀 Rodar Scraper';
+      return;
+    }
+
+    // Inicia polling de status
+    scraperPollingInterval = setInterval(pollScraperStatus, 2000);
+
+  } catch (e) {
+    showToast("Erro ao conectar com o servidor", "error");
+    btn.disabled = false;
+    btn.innerHTML = '🚀 Rodar Scraper';
+    document.getElementById("scraper-modal").classList.remove("show");
+  }
+}
+
+async function pollScraperStatus() {
+  try {
+    const resp = await fetch("/api/scraper-status");
+    const data = await resp.json();
+
+    const outputEl = document.getElementById("scraper-output");
+    const statusEl = document.getElementById("scraper-status");
+    const statusText = document.getElementById("scraper-status-text");
+    const titleEl = document.getElementById("scraper-modal-title");
+
+    // Atualiza o output
+    if (data.output) {
+      outputEl.textContent = data.output;
+      outputEl.scrollTop = outputEl.scrollHeight;
+    }
+
+    if (!data.running) {
+      // Scraper terminou
+      clearInterval(scraperPollingInterval);
+      scraperPollingInterval = null;
+
+      const btn = document.getElementById("btn-run-scraper");
+      btn.disabled = false;
+      btn.innerHTML = '🚀 Rodar Scraper';
+
+      if (data.success) {
+        titleEl.innerHTML = '✅ Scraper Finalizado!';
+        statusEl.className = "modal-status success";
+        statusText.textContent = "Concluido com sucesso! Verifique seu e-mail.";
+        showToast("Scraper finalizado! Deals enviadas por e-mail.", "success");
+      } else {
+        titleEl.innerHTML = '❌ Erro no Scraper';
+        statusEl.className = "modal-status error";
+        statusText.textContent = data.error || "Erro desconhecido";
+        outputEl.classList.add("error");
+        showToast("Scraper finalizou com erro.", "error");
+      }
+    } else {
+      // Ainda rodando
+      const lines = (data.output || "").split("\n").length;
+      statusText.textContent = `Scraper em execucao... (${lines} linhas de output)`;
+    }
+  } catch {
+    // Ignora erros de polling
+  }
+}
+
+function closeScraperModal() {
+  document.getElementById("scraper-modal").classList.remove("show");
+  // Não para o polling — scraper continua rodando em background
+}
+</script>
+</body>
+</html>

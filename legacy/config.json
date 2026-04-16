@@ -1,0 +1,30 @@
+{
+  "platform_family": "pc",
+  "preset": "new-deals",
+  "filters": {
+    "minRating": 5,
+    "maxPrice": 3,
+    "minDiscount": 80,
+    "maxDiscount": 100,
+    "sort": "date",
+    "drm": [
+      1,
+      2,
+      4,
+      8,
+      1024,
+      128,
+      64,
+      8192,
+      16,
+      32
+    ]
+  },
+  "email": {
+    "receiver": "arthurhenriquelopesf@gmail.com"
+  },
+  "scraper": {
+    "check_interval_hours": 24,
+    "time_window_hours": 24
+  }
+}

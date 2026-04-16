@@ -1,0 +1,43 @@
+name: GGDeals Daily Alerts
+
+on:
+  schedule:
+    # Roda todo dia às 10:00 UTC (07:00 BRT)
+    - cron: '0 10 * * *'
+  workflow_dispatch: # Permite rodar manualmente pelo GitHub
+
+jobs:
+  scrape_and_alert:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Install Playwright Browsers
+      run: |
+        python -m playwright install --with-deps chromium
+
+    - name: Run Scraper
+      env:
+        EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
+        EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+      run: python scraper.py
+
+    - name: Commit and Push Results
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add deals_*.json
+        git commit -m "Auto: Novos deals encontrados em $(date +'%Y-%m-%d')" || exit 0
+        git push
