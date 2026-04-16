@@ -79,43 +79,45 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    background: '#0f1113'
+    background: '#000',
+    minHeight: '100vh'
   },
   modal: {
-    background: '#1a1d1f',
+    background: '#0a0a0a',
     padding: '40px',
-    borderRadius: '20px',
+    borderRadius: '2px', // Sharp
     maxWidth: '450px',
     textAlign: 'center',
-    border: '1px solid #2f3336',
-    boxShadow: '0 20px 50px rgba(0,0,0,0.5)'
+    border: '1px solid #1a1a1a',
+    boxShadow: '0 0 50px rgba(0,0,0,0.8)'
   },
   iconWrapper: {
     width: '64px',
     height: '64px',
-    background: 'rgba(16, 185, 129, 0.1)',
-    borderRadius: '16px',
+    background: 'rgba(4, 240, 106, 0.05)',
+    borderRadius: '2px',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    margin: '0 auto 20px auto'
+    margin: '0 auto 20px auto',
+    border: '1px solid rgba(4, 240, 106, 0.2)'
   },
-  title: { fontSize: '24px', fontWeight: '800', marginBottom: '15px' },
-  text: { color: '#9ca3af', lineHeight: '1.6', fontSize: '15px', marginBottom: '25px' },
+  title: { fontSize: '24px', fontWeight: '900', marginBottom: '15px', color: '#e8f1f2', letterSpacing: '-0.5px' },
+  text: { color: '#84596b', lineHeight: '1.6', fontSize: '14px', marginBottom: '25px', fontWeight: '600' },
   form: { display: 'flex', flexDirection: 'column', gap: '20px' },
   inputGroup: {
     display: 'flex',
     alignItems: 'center',
-    background: '#0f1113',
-    borderRadius: '10px',
-    border: '1px solid #2f3336',
+    background: '#000',
+    borderRadius: '2px',
+    border: '1px solid #1a1a1a',
     padding: '0 15px'
   },
-  icon: { color: '#6b7280' },
+  icon: { color: '#087ca7' },
   input: {
     background: 'transparent',
     border: 'none',
-    color: '#fff',
+    color: '#e8f1f2',
     padding: '15px',
     width: '100%',
     outline: 'none',
@@ -127,26 +129,27 @@ const styles = {
     justifyContent: 'center',
     gap: '8px',
     fontSize: '12px',
-    color: '#10b981',
-    opacity: 0.8
+    color: '#04f06a',
+    fontWeight: '700'
   },
   button: {
-    background: '#10b981',
-    color: '#fff',
+    background: '#04f06a',
+    color: '#000',
     padding: '15px',
-    borderRadius: '10px',
+    borderRadius: '2px',
     border: 'none',
-    fontWeight: '800',
-    fontSize: '16px',
+    fontWeight: '900',
+    fontSize: '15px',
     cursor: 'pointer',
-    transition: 'transform 0.2s'
+    textTransform: 'uppercase'
   },
   link: {
     display: 'inline-block',
     marginTop: '25px',
-    color: '#6b7280',
-    fontSize: '13px',
+    color: '#087ca7',
+    fontSize: '12px',
     textDecoration: 'none',
-    borderBottom: '1px solid #2f3336'
+    borderBottom: '1px solid #1a1a1a',
+    fontWeight: '700'
   }
 }

@@ -78,62 +78,65 @@ const styles = {
   container: {
     display: 'flex',
     justifyContent: 'center',
-    alignSelf: 'center',
-    minHeight: '80vh',
-    color: '#fff'
+    alignItems: 'center',
+    minHeight: '100vh',
+    color: '#e8f1f2',
+    background: '#000'
   },
   card: {
-    background: '#1a1d1f',
+    background: '#0a0a0a',
     padding: '40px',
-    borderRadius: '16px',
+    borderRadius: '2px', // Sharp corners
     width: '100%',
     maxWidth: '400px',
-    boxShadow: '0 10px 25px rgba(0,0,0,0.3)',
+    boxShadow: '0 0 40px rgba(0,0,0,0.8)',
     textAlign: 'center',
-    border: '1px solid #2f3336'
+    border: '1px solid #1a1a1a'
   },
-  title: { fontSize: '24px', margin: '0 0 10px 0' },
-  subtitle: { color: '#9ca3af', fontSize: '14px', marginBottom: '30px' },
+  title: { fontSize: '24px', margin: '0 0 10px 0', fontWeight: '900', letterSpacing: '-0.5px' },
+  subtitle: { color: '#84596b', fontSize: '13px', marginBottom: '30px', fontWeight: '600' },
   form: { display: 'flex', flexDirection: 'column', gap: '15px' },
   inputGroup: {
     position: 'relative',
     display: 'flex',
     alignItems: 'center',
-    background: '#0f1113',
-    borderRadius: '8px',
-    border: '1px solid #2f3336'
+    background: '#000',
+    borderRadius: '2px',
+    border: '1px solid #1a1a1a'
   },
-  icon: { marginLeft: '12px', color: '#6b7280' },
+  icon: { marginLeft: '12px', color: '#087ca7' },
   input: {
     background: 'transparent',
     border: 'none',
-    color: '#fff',
+    color: '#e8f1f2',
     padding: '12px',
     width: '100%',
     fontSize: '14px',
     outline: 'none'
   },
   button: {
-    background: '#10b981',
-    color: '#fff',
+    background: '#04f06a', // Neon Green
+    color: '#000',
     padding: '12px',
-    borderRadius: '8px',
+    borderRadius: '2px',
     border: 'none',
-    fontSize: '16px',
-    fontWeight: '700',
+    fontSize: '15px',
+    fontWeight: '900',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     gap: '10px',
-    marginTop: '10px'
+    marginTop: '10px',
+    textTransform: 'uppercase'
   },
   toggleBtn: {
     background: 'none',
     border: 'none',
-    color: '#10b981',
+    color: '#087ca7',
     marginTop: '20px',
     cursor: 'pointer',
-    fontSize: '14px'
+    fontSize: '13px',
+    fontWeight: '700'
   }
 }
