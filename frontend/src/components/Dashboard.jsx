@@ -64,7 +64,8 @@ export default function Dashboard({ userId, initialConfig }) {
   const handleSave = async () => {
     setSaving(true)
     try {
-      await axios.post('http://localhost:8080/api/config', config)
+      const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080'
+      await axios.post(`${BASE_URL}/api/config`, config)
       alert('Alert configuration saved successfully!')
     } catch (e) {
       alert('Error saving config: ' + e.message)

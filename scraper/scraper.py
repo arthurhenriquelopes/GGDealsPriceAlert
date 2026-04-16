@@ -16,15 +16,54 @@ except ImportError:
     print("A biblioteca 'scrapling' não encontrada. Instale via pip install -r requirements.txt")
     exit(1)
 
-def fetch_configs_from_backend():
-    """Busca todas as configurações ativas da API Spring Boot local."""
+def fetch_configs():
+    """Busca configurações ativas priorizando Supabase PostgREST, com fallback para API Localhost."""
+    SUPABASE_URL = os.environ.get("SUPABASE_URL")
+    SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
+    
+    # 1. Tentar Supabase Cloud (Produção no GitHub Actions)
+    if SUPABASE_URL and SUPABASE_KEY:
+        print("[Fetch] Conectando ao Banco Supabase na Nuvem...")
+        url = f"{SUPABASE_URL}/rest/v1/alert_configs?select=*"
+        headers = {
+            "apikey": SUPABASE_KEY,
+            "Authorization": f"Bearer {SUPABASE_KEY}",
+            "Content-Type": "application/json"
+        }
+        try:
+            response = requests.get(url, headers=headers)
+            response.raise_for_status()
+            
+            # PostgREST returns snake_case based on DB cols mapping by default?
+            # Actually, PostgREST returns exact column names, which we created in Spring.
+            # Spring uses camelCase mapped to snake_case in Postgres by default (SpringPhysicalNamingStrategy).
+            # e.g., minDiscount -> min_discount. We should map snake_case back to camelCase for Python if needed.
+            # Wait, previously we built the URL from camelCase. We'll add a quick normalization for snake_case keys.
+            data = response.json()
+            normalized = []
+            for row in data:
+                norm = {}
+                for k, v in row.items():
+                    # snake_case to camelCase conversion
+                    parts = k.split('_')
+                    camel_k = parts[0] + ''.join(word.capitalize() for word in parts[1:])
+                    norm[camel_k] = v
+                normalized.append(norm)
+            return normalized
+
+        except Exception as e:
+            print(f"[Supabase] Erro ao buscar configurações na Nuvem: {e}")
+            return []
+
+    # 2. Tentar Servidor Spring Boot Local (Ambiente de Testes/Local PC)
+    print("[Fetch] SUPABASE_URL ausente. Fazendo fallback para API Localhost Java...")
     url = "http://localhost:8080/api/config"
     try:
         response = requests.get(url)
         response.raise_for_status()
         return response.json()
     except Exception as e:
-        print(f"[Backend] Erro ao buscar configurações no Spring Boot: {e}")
+        print(f"[Backend] Erro ao buscar configurações no Spring Boot local: {e}")
         return []
 
 def build_url(config):
@@ -171,7 +210,7 @@ def main():
         print("[Abort] Credenciais de e-mail não encontradas no ambiente.")
         return
 
-    configs = fetch_configs_from_backend()
+    configs = fetch_configs()
     print(f"[Main] Encontradas {len(configs)} configurações ativas.")
     
     for config in configs:
