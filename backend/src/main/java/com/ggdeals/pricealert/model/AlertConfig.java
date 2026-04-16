@@ -27,5 +27,7 @@ public class AlertConfig {
     @Column(length = 500)
     private String stores;
 
+    private String groqApiKey; // Chave para desbloquear funcionalidades de IA
+
     private String emailReceiver;
 }
