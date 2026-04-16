@@ -10,11 +10,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-try:
-    from scrapling.fetchers import StealthyFetcher
-except ImportError:
-    print("A biblioteca 'scrapling' não encontrada. Instale via pip install -r requirements.txt")
-    exit(1)
+from scrapling.fetchers import StealthyFetcher
 
 def fetch_configs():
     """Busca configurações ativas priorizando Supabase PostgREST, com fallback para API Localhost."""
