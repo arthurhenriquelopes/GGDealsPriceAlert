@@ -1,55 +1,72 @@
-# GGDeals Price Alert Dashboard 🚀
+# GGDeals Price Alert 🚀
 
-Um sistema completo de monitoramento de promoções do GG.Deals com dashboard de configuração e alertas automáticos por e-mail.
+A high-performance, full-stack automated system to track game deals and historical lows on [GG.deals](https://gg.deals). Built with Java Spring Boot, React, and Supabase.
 
-## 🛠️ Tecnologias
-- **Backend:** Python (HTTP Server)
-- **Frontend:** HTML5, CSS3 vanilla (dark mode), JavaScript
-- **Scraper:** Scrapling (StealthyFetcher p/ bypass de Cloudflare)
-- **Automação:** GitHub Actions
+[![Daily Scrape](https://github.com/arthurhenriquelopes/GGDealsPriceAlert/actions/workflows/daily_alerts.yml/badge.svg)](https://github.com/arthurhenriquelopes/GGDealsPriceAlert/actions/workflows/daily_alerts.yml)
 
-## 🚀 Como usar localmente
+## 🌟 Features
 
-1. **Instale as dependências:**
+- **Personalized Alerts**: Configure your own filters (platforms, price range, rating) via a modern dashboard.
+- **Premium Email Alerts**: Receive beautifully styled HTML emails with game thumbnails and direct links.
+- **Daily Automation**: Fully automated daily checks powered by GitHub Actions.
+- **Multi-user Support**: Secure authentication and individual configurations backed by Supabase.
+
+## 🛠️ Technology Stack
+
+- **Backend:** Java 21 / Spring Boot 3 / Maven
+- **Frontend:** React 18 / Vite / Lucide Icons
+- **Database:** PostgreSQL (Supabase)
+- **Scraper:** Python 3.10 / Scrapling (StealthyFetcher)
+- **Infrastructure:** GitHub Actions
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Java 21
+- Node.js (Latest LTS)
+- Python 3.10+
+- A [Supabase](https://supabase.com/) account
+
+### Local Setup
+
+1. **Clone the repository:**
    ```bash
-   pip install -r requirements.txt
-   python -m playwright install --with-deps chromium
+   git clone https://github.com/arthurhenriquelopes/GGDealsPriceAlert.git
+   cd                     GGDealsPriceAlert
    ```
 
-2. **Configure suas credenciais:**
-   Crie um arquivo `.env` na raiz do projeto:
+2. **Configure Environment Variables:**
+   Create a `.env` file in the root directory (using the variables set in your secrets):
    ```env
-   EMAIL_SENDER=seu-email@gmail.com
-   EMAIL_PASSWORD=sua-senha-de-app-16-digitos
+   EMAIL_SENDER=your-email@gmail.com
+   EMAIL_PASSWORD=your-app-password
+   SUPABASE_URL=your-project-url
+   SUPABASE_KEY=your-anon-key
    ```
-   *Nota: Use uma Senha de App do Google, não sua senha comum.*
 
-3. **Inicie o Dashboard:**
+3. **Backend Setup:**
    ```bash
-   python dashboard_server.py
+   cd backend
+   ./mvnw spring-boot:run
    ```
-   Acesse no navegador: `http://localhost:8585`
 
-4. **Rodar o Scraper manualmente:**
-   Você pode clicar no botão **"Rodar Scraper"** no dashboard ou rodar via terminal:
+4. **Frontend Setup:**
    ```bash
-   python scraper.py
+   cd frontend
+   npm install
+   npm run dev
    ```
 
-## 🤖 Automação via GitHub Actions
+## 🤖 GitHub Actions Setup
 
-Para que o scraper rode sozinho todos os dias e envie alertas para o seu e-mail:
+To enable daily automation, navigate to your repository **Settings > Secrets and variables > Actions** and add the following secrets:
 
-1. Suba este repositório para o seu GitHub.
-2. Vá em **Settings** -> **Secrets and variables** -> **Actions**.
-3. Adicione os seguintes Secrets:
-   - `EMAIL_SENDER`: O e-mail que vai enviar os alertas.
-   - `EMAIL_PASSWORD`: A Senha de App de 16 dígitos desse e-mail.
-4. O scraper rodará automaticamente às 10:00 UTC (07:00 BRT). Você também pode disparar manualmente em **Actions** -> **GGDeals Daily Alerts** -> **Run workflow**.
+- `EMAIL_SENDER`: Your Gmail address.
+- `EMAIL_PASSWORD`: Your 16-character Google App Password.
+- `SUPABASE_URL`: Your Supabase API URL.
+- `SUPABASE_KEY`: Your Supabase Service Role or Anon Key.
 
-## 📁 Estrutura do Projeto
-- `dashboard.html`: Interface do usuário.
-- `dashboard_server.py`: Servidor que gerencia configurações e dispara o scraper.
-- `scraper.py`: O "motor" que busca as ofertas e envia e-mails.
-- `config.json`: Armazena seus filtros e preferências.
-- `.env`: (Privado) Armazena suas credenciais de e-mail.
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
