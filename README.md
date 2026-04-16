@@ -8,7 +8,6 @@ A high-performance, full-stack automated system to track game deals and historic
 - **Dynamic Indicators**: Visually track high-quality deals with dynamic rating Fire icons (Orange for 6+, Red for 8+).
 - **Premium Email Alerts**: Receive beautifully styled, high-contrast HTML emails with game thumbnails, deep links, and deal insights directly to your inbox.
 - **Automated Workloads**: Headless scraping tasks powered by stealth automation (`scrapling`) deployed via GitHub Actions for daily delivery.
-- **AI Gatekeeping**: Securely hook your Groq API credentials for downstream AI inference features.
 
 ## 🛠️ Technology Stack
 
@@ -25,7 +24,6 @@ A high-performance, full-stack automated system to track game deals and historic
 - Java 21
 - Node.js (Latest LTS)
 - Python 3.10+
-- A [Groq](https://groq.com) account for AI features.
 
 ### Local Setup
 
