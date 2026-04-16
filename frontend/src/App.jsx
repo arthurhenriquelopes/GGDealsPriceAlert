@@ -9,10 +9,6 @@ function App() {
 
   const defaultUserId = "default-user"
 
-  useEffect(() => {
-    fetchConfig(defaultUserId)
-  }, [])
-
   const fetchConfig = async (userId) => {
     try {
       const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080'
@@ -26,6 +22,11 @@ function App() {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    fetchConfig(defaultUserId)
+  }, [])
+
 
   if (loading) return <div style={styles.loader}>INITIALIZING SYSTEM...</div>
 
