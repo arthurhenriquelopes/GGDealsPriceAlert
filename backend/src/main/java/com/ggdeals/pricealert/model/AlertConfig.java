@@ -18,8 +18,11 @@ public class AlertConfig {
 
     private String platformFamily = "pc";
     private Integer minRating = 5;
+    private Double minPrice = 0.0;
     private Double maxPrice = 20.0;
     private Boolean onlyHistoricalLow = false;
+    private String preset = "";
+    private String sort = "date";
     
     @Column(length = 500)
     private String drms; // Lista de IDs salvos como String ou JSON
