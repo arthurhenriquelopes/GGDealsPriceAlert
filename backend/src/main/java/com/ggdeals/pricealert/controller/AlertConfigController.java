@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/config")
@@ -17,8 +17,13 @@ public class AlertConfigController {
     @Autowired
     private AlertConfigRepository repository;
 
+    @GetMapping
+    public List<AlertConfig> getAllConfigs() {
+        return repository.findAll();
+    }
+
     @GetMapping("/{userId}")
-    public ResponseEntity<AlertConfig> getConfig(@PathVariable UUID userId) {
+    public ResponseEntity<AlertConfig> getConfig(@PathVariable String userId) {
         return repository.findByUserId(userId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
