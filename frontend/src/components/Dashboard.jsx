@@ -87,7 +87,8 @@ export default function Dashboard({ userId, initialConfig }) {
       maxMetascore: 100,
       steamReviews: '',
       minHltbCompletionMain: 0,
-      maxHltbCompletionMain: 200
+      maxHltbCompletionMain: 200,
+      emailReceiver: ''
     };
   })
   
@@ -161,6 +162,19 @@ export default function Dashboard({ userId, initialConfig }) {
             <div style={styles.inputGroup}>
                <label style={styles.inputLabel}>Max HLTB (Main Story)</label>
                <input type="number" style={styles.selectInput} value={config.maxHltbCompletionMain} onChange={(e) => setConfig({...config, maxHltbCompletionMain: e.target.value})} />
+            </div>
+          </FilterGroup>
+
+          <FilterGroup title="Notifications" icon={Monitor} defaultOpen={true}>
+            <div style={styles.inputGroup}>
+               <label style={styles.inputLabel}>Alert Email</label>
+               <input 
+                 type="email" 
+                 style={styles.textInput} 
+                 placeholder="your@email.com" 
+                 value={config.emailReceiver || ''} 
+                 onChange={(e) => setConfig({...config, emailReceiver: e.target.value})} 
+               />
             </div>
           </FilterGroup>
 
