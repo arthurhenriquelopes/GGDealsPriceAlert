@@ -69,7 +69,7 @@ function buildGGDealsUrl(config) {
 
   if (config.title)           params.set('title', config.title)
   if (config.minDiscount > 0) params.set('minDiscount', config.minDiscount)
-  if (config.maxPrice < 300)  params.set('maxPriceLocal', config.maxPrice)
+  if (config.maxPrice < 300)  params.set('maxPrice', config.maxPrice)
   if (config.minRating > 0)   params.set('minRating', config.minRating)
   if (config.minMetascore > 0) params.set('minMetascore', config.minMetascore)
   if (config.onlyHistoricalLow) params.set('historicalLow', '1')
