@@ -2,7 +2,7 @@ import { useState } from 'react'
 import FilterGroup from './FilterGroup'
 import CheckboxGroup from './CheckboxGroup'
 import RangeInput from './RangeInput'
-import { Save, ShoppingCart, Shield, Monitor, Percent, Clock, Gamepad2, Award } from 'lucide-react'
+import { Save, ShoppingCart, Shield, Monitor, Percent, Clock, Gamepad2, Award, ExternalLink, Copy, Check } from 'lucide-react'
 import axios from 'axios'
 
 const STORES = [
@@ -63,6 +63,48 @@ const STEAM_REVIEWS = [
   { id: 7, name: 'Positive' }, { id: 6, name: 'Mostly Positive' }, { id: 5, name: 'Mixed' }
 ]
 
+function buildGGDealsUrl(config) {
+  const base = 'https://gg.deals/deals/'
+  const params = new URLSearchParams()
+
+  if (config.title)           params.set('title', config.title)
+  if (config.minDiscount > 0) params.set('minDiscount', config.minDiscount)
+  if (config.maxPrice < 300)  params.set('maxPriceLocal', config.maxPrice)
+  if (config.minRating > 0)   params.set('minRating', config.minRating)
+  if (config.minMetascore > 0) params.set('minMetascore', config.minMetascore)
+  if (config.onlyHistoricalLow) params.set('historicalLow', '1')
+  if (config.dealsDate)       params.set('dealsDate', config.dealsDate)
+  if (config.maxHltbCompletionMain && config.maxHltbCompletionMain < 200)
+    params.set('maxHltbCompletionMain', config.maxHltbCompletionMain)
+
+  const allStoreIds = STORES.map(s => s.id)
+  const selectedStores = config.stores ? config.stores.split(',').map(Number) : []
+  const missingStores = allStoreIds.filter(id => !selectedStores.includes(id))
+  if (missingStores.length > 0 && missingStores.length < allStoreIds.length)
+    missingStores.forEach(id => params.append('excludeStores[]', id))
+
+  const allDrmIds = DRMS.map(d => d.id)
+  const selectedDrms = config.drms ? config.drms.split(',').map(Number) : []
+  const missingDrms = allDrmIds.filter(id => !selectedDrms.includes(id))
+  if (missingDrms.length > 0 && missingDrms.length < allDrmIds.length)
+    missingDrms.forEach(id => params.append('excludeDrm[]', id))
+
+  if (config.platforms) {
+    config.platforms.split(',').filter(Boolean).forEach(id => params.append('platforms[]', id))
+  }
+
+  if (config.subscriptions) {
+    config.subscriptions.split(',').filter(Boolean).forEach(id => params.append('subscriptions[]', id))
+  }
+
+  if (config.steamReviews) {
+    config.steamReviews.split(',').filter(Boolean).forEach(id => params.append('steamReviews[]', id))
+  }
+
+  const qs = params.toString()
+  return qs ? `${base}?${qs}` : base
+}
+
 export default function Dashboard({ userId, initialConfig }) {
   const [config, setConfig] = useState(() => {
     if (initialConfig) return initialConfig;
@@ -93,6 +135,16 @@ export default function Dashboard({ userId, initialConfig }) {
   })
   
   const [saving, setSaving] = useState(false)
+  const [copied, setCopied] = useState(false)
+
+  const generatedUrl = buildGGDealsUrl(config)
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(generatedUrl).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }
 
   const handleSave = async () => {
     setSaving(true)
@@ -113,6 +165,32 @@ export default function Dashboard({ userId, initialConfig }) {
 
   return (
     <div style={styles.container}>
+
+      {/* Generated URL Preview */}
+      <div style={styles.urlBar}>
+        <div style={styles.urlLabel}>GENERATED URL</div>
+        <div style={styles.urlRow}>
+          <div style={styles.urlText} title={generatedUrl}>{generatedUrl}</div>
+          <button
+            id="btn-copy-url"
+            onClick={handleCopy}
+            style={styles.urlActionBtn}
+            title="Copy URL"
+          >
+            {copied ? <Check size={15} color="#0f0" /> : <Copy size={15} />}
+          </button>
+          <a
+            id="btn-open-ggdeals"
+            href={generatedUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={styles.urlActionBtn}
+            title="Open in GG.Deals"
+          >
+            <ExternalLink size={15} />
+          </a>
+        </div>
+      </div>
       <div style={styles.mainGrid}>
         
         {/* Sidebar Controls */}
@@ -233,6 +311,56 @@ export default function Dashboard({ userId, initialConfig }) {
 }
 
 const styles = {
+  urlBar: {
+    background: '#0a0a0a',
+    border: '1px solid #1e1e1e',
+    borderRadius: '4px',
+    padding: '12px 16px',
+    marginBottom: '24px',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
+  },
+  urlLabel: {
+    fontSize: '10px',
+    fontWeight: '800',
+    color: '#555',
+    letterSpacing: '1.5px',
+    textTransform: 'uppercase',
+  },
+  urlRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+  },
+  urlText: {
+    flex: 1,
+    fontSize: '12px',
+    color: '#7dd3fc',
+    fontFamily: 'monospace',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    background: '#111',
+    border: '1px solid #222',
+    borderRadius: '3px',
+    padding: '8px 12px',
+    cursor: 'default',
+  },
+  urlActionBtn: {
+    background: '#1a1a1a',
+    border: '1px solid #333',
+    color: '#aaa',
+    borderRadius: '3px',
+    padding: '7px 10px',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textDecoration: 'none',
+    transition: 'background 0.15s, color 0.15s',
+    flexShrink: 0,
+  },
   container: { width: '100%', maxWidth: '1400px', margin: '0 auto' },
   mainGrid: { display: 'grid', gridTemplateColumns: '320px 1fr', gap: '24px' },
   sidebar: { display: 'flex', flexDirection: 'column', gap: '20px' },
