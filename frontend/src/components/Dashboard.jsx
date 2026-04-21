@@ -67,27 +67,29 @@ function buildGGDealsUrl(config) {
   const base = 'https://gg.deals/deals/'
   const params = new URLSearchParams()
 
-  if (config.title)           params.set('title', config.title)
-  if (config.minDiscount > 0) params.set('minDiscount', config.minDiscount)
-  if (config.maxPrice < 300)  params.set('maxPrice', config.maxPrice)
-  if (config.minRating > 0)   params.set('minRating', config.minRating)
-  if (config.minMetascore > 0) params.set('minMetascore', config.minMetascore)
-  if (config.onlyHistoricalLow) params.set('historicalLow', '1')
-  if (config.dealsDate)       params.set('dealsDate', config.dealsDate)
+  if (config.title)              params.set('title', config.title)
+  if (config.minDiscount > 0)    params.set('minDiscount', config.minDiscount)
+  if (config.maxDiscount < 100)  params.set('maxDiscount', config.maxDiscount)
+  if (config.maxPrice < 300)     params.set('maxPrice', config.maxPrice)
+  if (config.minRating > 0)      params.set('minRating', config.minRating)
+  if (config.minMetascore > 0)   params.set('minMetascore', config.minMetascore)
+  if (config.onlyHistoricalLow)  params.set('historicalLow', '1')
+  if (config.dealsDate)          params.set('dealsDate', config.dealsDate)
+  if (config.dealsExpiryDate)    params.set('dealsExpiryDate', config.dealsExpiryDate)
   if (config.maxHltbCompletionMain && config.maxHltbCompletionMain < 200)
     params.set('maxHltbCompletionMain', config.maxHltbCompletionMain)
 
+  // Stores: include only selected, as ?store=x,y
   const allStoreIds = STORES.map(s => s.id)
   const selectedStores = config.stores ? config.stores.split(',').map(Number) : []
-  const missingStores = allStoreIds.filter(id => !selectedStores.includes(id))
-  if (missingStores.length > 0 && missingStores.length < allStoreIds.length)
-    missingStores.forEach(id => params.append('excludeStores[]', id))
+  if (selectedStores.length > 0 && selectedStores.length < allStoreIds.length)
+    params.set('store', selectedStores.join(','))
 
+  // DRMs: include only selected, as ?drm=x,y
   const allDrmIds = DRMS.map(d => d.id)
   const selectedDrms = config.drms ? config.drms.split(',').map(Number) : []
-  const missingDrms = allDrmIds.filter(id => !selectedDrms.includes(id))
-  if (missingDrms.length > 0 && missingDrms.length < allDrmIds.length)
-    missingDrms.forEach(id => params.append('excludeDrm[]', id))
+  if (selectedDrms.length > 0 && selectedDrms.length < allDrmIds.length)
+    params.set('drm', selectedDrms.join(','))
 
   if (config.platforms) {
     config.platforms.split(',').filter(Boolean).forEach(id => params.append('platforms[]', id))
@@ -119,7 +121,8 @@ export default function Dashboard({ userId, initialConfig }) {
       minDiscount: 0,
       maxDiscount: 100,
       onlyHistoricalLow: false,
-      dealsDate: '',
+      dealsDate: 'last24h',
+      dealsExpiryDate: '',
       releaseDate: '',
       stores: STORES.map(s => s.id).join(','),
       drms: DRMS.map(d => d.id).join(','),
@@ -235,6 +238,15 @@ export default function Dashboard({ userId, initialConfig }) {
                  <option value="last24h">Last 24 Hours</option>
                  <option value="last48h">Last 48 Hours</option>
                  <option value="lastWeek">Last Week</option>
+               </select>
+            </div>
+            <div style={styles.inputGroup}>
+               <label style={styles.inputLabel}>Deal Expires</label>
+               <select style={styles.selectInput} value={config.dealsExpiryDate || ''} onChange={(e) => setConfig({...config, dealsExpiryDate: e.target.value})}>
+                 <option value="">Any Time</option>
+                 <option value="withinDay">Within 24 Hours</option>
+                 <option value="withinWeek">Within a Week</option>
+                 <option value="withinMonth">Within a Month</option>
                </select>
             </div>
             <div style={styles.inputGroup}>
